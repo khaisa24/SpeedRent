@@ -10,6 +10,7 @@ use App\Http\Controllers\KendaraanController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\RentalController;
+use App\Http\Controllers\UserController;
 
 Route::get('/test-kategori-simple', function() {
     try {
@@ -77,5 +78,10 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan');
         Route::get('/laporan/export', [LaporanController::class, 'export'])->name('laporan.export');
+
+        Route::get('/users', [UserController::class, 'index'])->name('users');
+        Route::post('/users', [UserController::class, 'store'])->name('users.store');
+        Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
+        Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
     });
 });

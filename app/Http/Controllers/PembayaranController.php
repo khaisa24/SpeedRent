@@ -10,30 +10,22 @@ use Illuminate\Support\Facades\Storage;
 
 class PembayaranController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $pembayarans = Pembayaran::with(['rental.kendaraan', 'user'])
+        $pembayaran = Pembayaran::with(['user', 'rental'])
             ->orderBy('created_at', 'desc')
-            ->get();
-            
-        // Ambil semua rental yang belum memiliki pembayaran
-        $rentals = Rental::whereIn('status_sewa', ['pending', 'berlangsung'])
-            ->whereDoesntHave('pembayaran')
-            ->with(['user', 'kendaraan'])
-            ->get();
+            ->paginate(10);
         
-        $editPembayaran = null;
-        if ($request->has('edit')) {
-            $editPembayaran = Pembayaran::with(['rental', 'user'])->find($request->edit);
-        }
-
-        // Hitung statistik berdasarkan keberadaan pembayaran
-        $total_pendapatan = Pembayaran::sum('jumlah_bayar');
-        $pending_payments = Rental::whereIn('status_sewa', ['pending', 'berlangsung'])
-            ->whereDoesntHave('pembayaran')
+        $totalPembayaran = Pembayaran::sum('jumlah_bayar');
+        $pendingCount = Rental::whereIn('status_sewa', ['pending', 'berlangsung'])
+            ->whereNotExists(function ($query) {
+                $query->select('id_rental')
+                      ->from('pembayaran')
+                      ->whereColumn('rental.id_rental', 'pembayaran.id_rental');
+            })
             ->count();
-
-        return view('admin.pembayaran', compact('pembayarans', 'rentals', 'editPembayaran', 'total_pendapatan', 'pending_payments'));
+    
+        return view('admin.pembayaran', compact('pembayaran', 'totalPembayaran', 'pendingCount'));
     }
     
     public function store(Request $request)

@@ -36,37 +36,32 @@
             </div>
         </div>
 
-        <!-- Statistik Utama -->
+        <!-- Ringkasan Periode - Dipindahkan ke atas -->
         <div class="row mb-4">
-            <div class="col-md-4">
-                <div class="orange-card text-center stat-card">
-                    <div class="card-body">
-                        <i class="fas fa-money-bill-wave fa-2x text-success mb-3"></i>
-                        <h3 class="text-success">Rp {{ number_format($total_pendapatan, 0, ',', '.') }}</h3>
-                        <p class="text-muted mb-0">Total Pendapatan</p>
-                        <small class="text-muted">Periode: {{ ucfirst(str_replace('_', ' ', $periode)) }}</small>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-md-4">
-                <div class="orange-card text-center stat-card">
-                    <div class="card-body">
-                        <i class="fas fa-car-side fa-2x text-primary mb-3"></i>
-                        <h3 class="text-primary">{{ number_format($total_transaksi, 0, ',', '.') }}</h3>
-                        <p class="text-muted mb-0">Total Transaksi</p>
-                        <small class="text-muted">Rental diselesaikan</small>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-md-4">
-                <div class="orange-card text-center stat-card">
-                    <div class="card-body">
-                        <i class="fas fa-chart-line fa-2x text-warning mb-3"></i>
-                        <h3 class="text-warning">Rp {{ number_format($rata_rata_sewa, 0, ',', '.') }}</h3>
-                        <p class="text-muted mb-0">Rata-rata per Rental</p>
-                        <small class="text-muted">Nilai transaksi rata-rata</small>
+            <div class="col-12">
+                <div class="orange-card">
+                    <div class="card-body py-3">
+                        <div class="row text-center">
+                            <div class="col-md-3 border-end">
+                                <div class="text-success fw-bold fs-4">Rp {{ number_format($total_pendapatan, 0, ',', '.') }}</div>
+                                <small class="text-muted">Total Pendapatan</small>
+                                <div class="mt-1">
+                                    <small class="text-muted">Periode: {{ ucfirst(str_replace('_', ' ', $periode)) }}</small>
+                                </div>
+                            </div>
+                            <div class="col-md-3 border-end">
+                                <div class="text-primary fw-bold fs-4">{{ $total_transaksi }}</div>
+                                <small class="text-muted">Total Transaksi</small>
+                            </div>
+                            <div class="col-md-3 border-end">
+                                <div class="text-warning fw-bold fs-4">Rp {{ number_format($rata_rata_sewa, 0, ',', '.') }}</div>
+                                <small class="text-muted">Rata-rata per Rental</small>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="text-info fw-bold fs-4">{{ $kendaraan_terpopuler->count() }}</div>
+                                <small class="text-muted">Kendaraan Aktif</small>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -75,32 +70,30 @@
         <div class="row">
             <!-- Kendaraan Terpopuler -->
             <div class="col-lg-6 mb-4">
-                <div class="orange-card">
+                <div class="orange-card h-100">
                     <div class="card-body">
-                        <h5 class="card-title text-white mb-4">
+                        <h5 class="card-title text-white mb-3">
                             <i class="fas fa-crown me-2 text-warning"></i>
                             Kendaraan Terpopuler
                         </h5>
                         
                         @if($kendaraan_terpopuler->count() > 0)
                             <div class="table-responsive">
-                                <table class="table table-dark table-hover">
+                                <table class="table table-dark table-hover table-sm">
                                     <thead>
                                         <tr>
                                             <th>Kendaraan</th>
-                                            <th>Plat</th>
-                                            <th class="text-center">Total Sewa</th>
-                                            <th class="text-center">Peringkat</th>
+                                            <th class="text-center">Sewa</th>
+                                            <th class="text-center">Rank</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach($kendaraan_terpopuler as $index => $populer)
                                             <tr>
                                                 <td>
-                                                    <div class="text-white">{{ $populer->kendaraan->merk }} {{ $populer->kendaraan->model }}</div>
-                                                    <small class="text-muted">{{ $populer->kendaraan->tahun }}</small>
+                                                    <div class="text-white small">{{ $populer->kendaraan->merk }} {{ $populer->kendaraan->model }}</div>
+                                                    <small class="text-muted">{{ $populer->kendaraan->plat_nomor }}</small>
                                                 </td>
-                                                <td class="text-muted">{{ $populer->kendaraan->plat_nomor }}</td>
                                                 <td class="text-center text-white">{{ $populer->total_sewa }}x</td>
                                                 <td class="text-center">
                                                     @if($index == 0)
@@ -119,9 +112,9 @@
                                 </table>
                             </div>
                         @else
-                            <div class="text-center py-4">
-                                <i class="fas fa-car fa-3x text-muted mb-3"></i>
-                                <p class="text-muted mb-0">Belum ada data kendaraan</p>
+                            <div class="text-center py-3">
+                                <i class="fas fa-car fa-2x text-muted mb-2"></i>
+                                <p class="text-muted mb-0 small">Belum ada data kendaraan</p>
                             </div>
                         @endif
                     </div>
@@ -130,21 +123,20 @@
 
             <!-- Customer Teraktif -->
             <div class="col-lg-6 mb-4">
-                <div class="orange-card">
+                <div class="orange-card h-100">
                     <div class="card-body">
-                        <h5 class="card-title text-white mb-4">
+                        <h5 class="card-title text-white mb-3">
                             <i class="fas fa-users me-2 text-info"></i>
                             Customer Teraktif
                         </h5>
                         
                         @if($customer_teraktif->count() > 0)
                             <div class="table-responsive">
-                                <table class="table table-dark table-hover">
+                                <table class="table table-dark table-hover table-sm">
                                     <thead>
                                         <tr>
                                             <th>Customer</th>
-                                            <th>Email</th>
-                                            <th class="text-center">Total Rental</th>
+                                            <th class="text-center">Rental</th>
                                             <th class="text-center">Status</th>
                                         </tr>
                                     </thead>
@@ -152,10 +144,9 @@
                                         @foreach($customer_teraktif as $index => $customer)
                                             <tr>
                                                 <td>
-                                                    <div class="text-white">{{ $customer->user->nama_user }}</div>
-                                                    <small class="text-muted">Member sejak {{ $customer->user->created_at->format('M Y') }}</small>
+                                                    <div class="text-white small">{{ $customer->user->nama_user }}</div>
+                                                    <small class="text-muted">{{ $customer->user->email }}</small>
                                                 </td>
-                                                <td class="text-muted">{{ $customer->user->email }}</td>
                                                 <td class="text-center text-white">{{ $customer->total_rental }}x</td>
                                                 <td class="text-center">
                                                     @if($customer->total_rental >= 10)
@@ -172,9 +163,9 @@
                                 </table>
                             </div>
                         @else
-                            <div class="text-center py-4">
-                                <i class="fas fa-users fa-3x text-muted mb-3"></i>
-                                <p class="text-muted mb-0">Belum ada data customer</p>
+                            <div class="text-center py-3">
+                                <i class="fas fa-users fa-2x text-muted mb-2"></i>
+                                <p class="text-muted mb-0 small">Belum ada data customer</p>
                             </div>
                         @endif
                     </div>
@@ -185,21 +176,21 @@
         <div class="row">
             <!-- Metode Pembayaran -->
             <div class="col-lg-6 mb-4">
-                <div class="orange-card">
+                <div class="orange-card h-100">
                     <div class="card-body">
-                        <h5 class="card-title text-white mb-4">
+                        <h5 class="card-title text-white mb-3">
                             <i class="fas fa-credit-card me-2 text-success"></i>
                             Metode Pembayaran
                         </h5>
                         
                         @if($metode_pembayaran->count() > 0)
                             <div class="table-responsive">
-                                <table class="table table-dark table-hover">
+                                <table class="table table-dark table-hover table-sm">
                                     <thead>
                                         <tr>
                                             <th>Metode</th>
-                                            <th class="text-center">Jumlah Transaksi</th>
-                                            <th class="text-end">Total Pendapatan</th>
+                                            <th class="text-center">Transaksi</th>
+                                            <th class="text-end">Pendapatan</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -218,9 +209,9 @@
                                 </table>
                             </div>
                         @else
-                            <div class="text-center py-4">
-                                <i class="fas fa-credit-card fa-3x text-muted mb-3"></i>
-                                <p class="text-muted mb-0">Belum ada data pembayaran</p>
+                            <div class="text-center py-3">
+                                <i class="fas fa-credit-card fa-2x text-muted mb-2"></i>
+                                <p class="text-muted mb-0 small">Belum ada data pembayaran</p>
                             </div>
                         @endif
                     </div>
@@ -229,11 +220,11 @@
 
             <!-- Grafik Pendapatan Sederhana -->
             <div class="col-lg-6 mb-4">
-                <div class="orange-card">
+                <div class="orange-card h-100">
                     <div class="card-body">
-                        <h5 class="card-title text-white mb-4">
+                        <h5 class="card-title text-white mb-3">
                             <i class="fas fa-chart-bar me-2 text-orange"></i>
-                            Tren Pendapatan Tahunan {{ date('Y') }}
+                            Tren Pendapatan {{ date('Y') }}
                         </h5>
                         
                         <div class="grafik-sederhana">
@@ -242,67 +233,30 @@
                                 $bulan = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
                             @endphp
                             
-                            <div class="d-flex align-items-end" style="height: 200px; gap: 8px;">
+                            <div class="d-flex align-items-end" style="height: 150px; gap: 6px;">
                                 @foreach($pendapatan_bulanan as $index => $pendapatan)
                                     @php
-                                        $tinggi = $pendapatan / $max_pendapatan * 150;
+                                        $tinggi = $pendapatan / $max_pendapatan * 100;
                                         $warna = $pendapatan > 0 ? 'var(--orange)' : 'var(--gray)';
                                     @endphp
                                     <div class="d-flex flex-column align-items-center" style="flex: 1;">
                                         <div 
                                             class="grafik-bar rounded-top" 
-                                            style="height: {{ $tinggi }}px; background: {{ $warna }}; width: 30px;"
+                                            style="height: {{ $tinggi }}px; background: {{ $warna }}; width: 25px;"
                                             data-bs-toggle="tooltip" 
-                                            title="Rp {{ number_format($pendapatan, 0, ',', '.') }}"
+                                            title="{{ $bulan[$index] }}: Rp {{ number_format($pendapatan, 0, ',', '.') }}"
                                         ></div>
-                                        <small class="text-muted mt-2">{{ $bulan[$index] }}</small>
+                                        <small class="text-muted mt-1">{{ $bulan[$index] }}</small>
                                     </div>
                                 @endforeach
                             </div>
                         </div>
                         
-                        <div class="mt-4 text-center">
+                        <div class="mt-3 text-center">
                             <small class="text-muted">
-                                Total Pendapatan Tahun {{ date('Y') }}: 
+                                Total {{ date('Y') }}: 
                                 <strong class="text-success">Rp {{ number_format(array_sum($pendapatan_bulanan), 0, ',', '.') }}</strong>
                             </small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Ringkasan Periode -->
-        <div class="orange-card">
-            <div class="card-body">
-                <h5 class="card-title text-white mb-4">
-                    <i class="fas fa-calendar-alt me-2 text-primary"></i>
-                    Ringkasan Periode
-                </h5>
-                
-                <div class="row text-center">
-                    <div class="col-md-3">
-                        <div class="border rounded p-3">
-                            <div class="text-success fw-bold fs-5">Rp {{ number_format($total_pendapatan, 0, ',', '.') }}</div>
-                            <small class="text-muted">Pendapatan</small>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="border rounded p-3">
-                            <div class="text-primary fw-bold fs-5">{{ $total_transaksi }}</div>
-                            <small class="text-muted">Transaksi</small>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="border rounded p-3">
-                            <div class="text-warning fw-bold fs-5">{{ $kendaraan_terpopuler->count() }}</div>
-                            <small class="text-muted">Kendaraan Aktif</small>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="border rounded p-3">
-                            <div class="text-info fw-bold fs-5">{{ $customer_teraktif->count() }}</div>
-                            <small class="text-muted">Customer Aktif</small>
                         </div>
                     </div>
                 </div>
@@ -333,6 +287,14 @@
     
     .table-hover tbody tr:hover {
         background: rgba(255, 107, 53, 0.1) !important;
+    }
+    
+    .border-end {
+        border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
+    }
+    
+    .orange-card {
+        border: 1px solid rgba(255, 107, 53, 0.2);
     }
 </style>
 

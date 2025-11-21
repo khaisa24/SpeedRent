@@ -36,37 +36,32 @@
             </div>
         </div>
 
-        <!-- Statistik Utama -->
+        <!-- Ringkasan Periode - Dipindahkan ke atas -->
         <div class="row mb-4">
-            <div class="col-md-4">
-                <div class="orange-card text-center stat-card">
-                    <div class="card-body">
-                        <i class="fas fa-money-bill-wave fa-2x text-success mb-3"></i>
-                        <h3 class="text-success">Rp <?php echo e(number_format($total_pendapatan, 0, ',', '.')); ?></h3>
-                        <p class="text-muted mb-0">Total Pendapatan</p>
-                        <small class="text-muted">Periode: <?php echo e(ucfirst(str_replace('_', ' ', $periode))); ?></small>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-md-4">
-                <div class="orange-card text-center stat-card">
-                    <div class="card-body">
-                        <i class="fas fa-car-side fa-2x text-primary mb-3"></i>
-                        <h3 class="text-primary"><?php echo e(number_format($total_transaksi, 0, ',', '.')); ?></h3>
-                        <p class="text-muted mb-0">Total Transaksi</p>
-                        <small class="text-muted">Rental diselesaikan</small>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-md-4">
-                <div class="orange-card text-center stat-card">
-                    <div class="card-body">
-                        <i class="fas fa-chart-line fa-2x text-warning mb-3"></i>
-                        <h3 class="text-warning">Rp <?php echo e(number_format($rata_rata_sewa, 0, ',', '.')); ?></h3>
-                        <p class="text-muted mb-0">Rata-rata per Rental</p>
-                        <small class="text-muted">Nilai transaksi rata-rata</small>
+            <div class="col-12">
+                <div class="orange-card">
+                    <div class="card-body py-3">
+                        <div class="row text-center">
+                            <div class="col-md-3 border-end">
+                                <div class="text-success fw-bold fs-4">Rp <?php echo e(number_format($total_pendapatan, 0, ',', '.')); ?></div>
+                                <small class="text-muted">Total Pendapatan</small>
+                                <div class="mt-1">
+                                    <small class="text-muted">Periode: <?php echo e(ucfirst(str_replace('_', ' ', $periode))); ?></small>
+                                </div>
+                            </div>
+                            <div class="col-md-3 border-end">
+                                <div class="text-primary fw-bold fs-4"><?php echo e($total_transaksi); ?></div>
+                                <small class="text-muted">Total Transaksi</small>
+                            </div>
+                            <div class="col-md-3 border-end">
+                                <div class="text-warning fw-bold fs-4">Rp <?php echo e(number_format($rata_rata_sewa, 0, ',', '.')); ?></div>
+                                <small class="text-muted">Rata-rata per Rental</small>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="text-info fw-bold fs-4"><?php echo e($kendaraan_terpopuler->count()); ?></div>
+                                <small class="text-muted">Kendaraan Aktif</small>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -75,32 +70,30 @@
         <div class="row">
             <!-- Kendaraan Terpopuler -->
             <div class="col-lg-6 mb-4">
-                <div class="orange-card">
+                <div class="orange-card h-100">
                     <div class="card-body">
-                        <h5 class="card-title text-white mb-4">
+                        <h5 class="card-title text-white mb-3">
                             <i class="fas fa-crown me-2 text-warning"></i>
                             Kendaraan Terpopuler
                         </h5>
                         
                         <?php if($kendaraan_terpopuler->count() > 0): ?>
                             <div class="table-responsive">
-                                <table class="table table-dark table-hover">
+                                <table class="table table-dark table-hover table-sm">
                                     <thead>
                                         <tr>
                                             <th>Kendaraan</th>
-                                            <th>Plat</th>
-                                            <th class="text-center">Total Sewa</th>
-                                            <th class="text-center">Peringkat</th>
+                                            <th class="text-center">Sewa</th>
+                                            <th class="text-center">Rank</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php $__currentLoopData = $kendaraan_terpopuler; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $populer): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                             <tr>
                                                 <td>
-                                                    <div class="text-white"><?php echo e($populer->kendaraan->merk); ?> <?php echo e($populer->kendaraan->model); ?></div>
-                                                    <small class="text-muted"><?php echo e($populer->kendaraan->tahun); ?></small>
+                                                    <div class="text-white small"><?php echo e($populer->kendaraan->merk); ?> <?php echo e($populer->kendaraan->model); ?></div>
+                                                    <small class="text-muted"><?php echo e($populer->kendaraan->plat_nomor); ?></small>
                                                 </td>
-                                                <td class="text-muted"><?php echo e($populer->kendaraan->plat_nomor); ?></td>
                                                 <td class="text-center text-white"><?php echo e($populer->total_sewa); ?>x</td>
                                                 <td class="text-center">
                                                     <?php if($index == 0): ?>
@@ -119,9 +112,9 @@
                                 </table>
                             </div>
                         <?php else: ?>
-                            <div class="text-center py-4">
-                                <i class="fas fa-car fa-3x text-muted mb-3"></i>
-                                <p class="text-muted mb-0">Belum ada data kendaraan</p>
+                            <div class="text-center py-3">
+                                <i class="fas fa-car fa-2x text-muted mb-2"></i>
+                                <p class="text-muted mb-0 small">Belum ada data kendaraan</p>
                             </div>
                         <?php endif; ?>
                     </div>
@@ -130,21 +123,20 @@
 
             <!-- Customer Teraktif -->
             <div class="col-lg-6 mb-4">
-                <div class="orange-card">
+                <div class="orange-card h-100">
                     <div class="card-body">
-                        <h5 class="card-title text-white mb-4">
+                        <h5 class="card-title text-white mb-3">
                             <i class="fas fa-users me-2 text-info"></i>
                             Customer Teraktif
                         </h5>
                         
                         <?php if($customer_teraktif->count() > 0): ?>
                             <div class="table-responsive">
-                                <table class="table table-dark table-hover">
+                                <table class="table table-dark table-hover table-sm">
                                     <thead>
                                         <tr>
                                             <th>Customer</th>
-                                            <th>Email</th>
-                                            <th class="text-center">Total Rental</th>
+                                            <th class="text-center">Rental</th>
                                             <th class="text-center">Status</th>
                                         </tr>
                                     </thead>
@@ -152,10 +144,9 @@
                                         <?php $__currentLoopData = $customer_teraktif; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $customer): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                             <tr>
                                                 <td>
-                                                    <div class="text-white"><?php echo e($customer->user->nama_user); ?></div>
-                                                    <small class="text-muted">Member sejak <?php echo e($customer->user->created_at->format('M Y')); ?></small>
+                                                    <div class="text-white small"><?php echo e($customer->user->nama_user); ?></div>
+                                                    <small class="text-muted"><?php echo e($customer->user->email); ?></small>
                                                 </td>
-                                                <td class="text-muted"><?php echo e($customer->user->email); ?></td>
                                                 <td class="text-center text-white"><?php echo e($customer->total_rental); ?>x</td>
                                                 <td class="text-center">
                                                     <?php if($customer->total_rental >= 10): ?>
@@ -172,9 +163,9 @@
                                 </table>
                             </div>
                         <?php else: ?>
-                            <div class="text-center py-4">
-                                <i class="fas fa-users fa-3x text-muted mb-3"></i>
-                                <p class="text-muted mb-0">Belum ada data customer</p>
+                            <div class="text-center py-3">
+                                <i class="fas fa-users fa-2x text-muted mb-2"></i>
+                                <p class="text-muted mb-0 small">Belum ada data customer</p>
                             </div>
                         <?php endif; ?>
                     </div>
@@ -185,21 +176,21 @@
         <div class="row">
             <!-- Metode Pembayaran -->
             <div class="col-lg-6 mb-4">
-                <div class="orange-card">
+                <div class="orange-card h-100">
                     <div class="card-body">
-                        <h5 class="card-title text-white mb-4">
+                        <h5 class="card-title text-white mb-3">
                             <i class="fas fa-credit-card me-2 text-success"></i>
                             Metode Pembayaran
                         </h5>
                         
                         <?php if($metode_pembayaran->count() > 0): ?>
                             <div class="table-responsive">
-                                <table class="table table-dark table-hover">
+                                <table class="table table-dark table-hover table-sm">
                                     <thead>
                                         <tr>
                                             <th>Metode</th>
-                                            <th class="text-center">Jumlah Transaksi</th>
-                                            <th class="text-end">Total Pendapatan</th>
+                                            <th class="text-center">Transaksi</th>
+                                            <th class="text-end">Pendapatan</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -219,9 +210,9 @@
                                 </table>
                             </div>
                         <?php else: ?>
-                            <div class="text-center py-4">
-                                <i class="fas fa-credit-card fa-3x text-muted mb-3"></i>
-                                <p class="text-muted mb-0">Belum ada data pembayaran</p>
+                            <div class="text-center py-3">
+                                <i class="fas fa-credit-card fa-2x text-muted mb-2"></i>
+                                <p class="text-muted mb-0 small">Belum ada data pembayaran</p>
                             </div>
                         <?php endif; ?>
                     </div>
@@ -230,11 +221,11 @@
 
             <!-- Grafik Pendapatan Sederhana -->
             <div class="col-lg-6 mb-4">
-                <div class="orange-card">
+                <div class="orange-card h-100">
                     <div class="card-body">
-                        <h5 class="card-title text-white mb-4">
+                        <h5 class="card-title text-white mb-3">
                             <i class="fas fa-chart-bar me-2 text-orange"></i>
-                            Tren Pendapatan Tahunan <?php echo e(date('Y')); ?>
+                            Tren Pendapatan <?php echo e(date('Y')); ?>
 
                         </h5>
                         
@@ -244,67 +235,30 @@
                                 $bulan = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
                             ?>
                             
-                            <div class="d-flex align-items-end" style="height: 200px; gap: 8px;">
+                            <div class="d-flex align-items-end" style="height: 150px; gap: 6px;">
                                 <?php $__currentLoopData = $pendapatan_bulanan; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $pendapatan): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <?php
-                                        $tinggi = $pendapatan / $max_pendapatan * 150;
+                                        $tinggi = $pendapatan / $max_pendapatan * 100;
                                         $warna = $pendapatan > 0 ? 'var(--orange)' : 'var(--gray)';
                                     ?>
                                     <div class="d-flex flex-column align-items-center" style="flex: 1;">
                                         <div 
                                             class="grafik-bar rounded-top" 
-                                            style="height: <?php echo e($tinggi); ?>px; background: <?php echo e($warna); ?>; width: 30px;"
+                                            style="height: <?php echo e($tinggi); ?>px; background: <?php echo e($warna); ?>; width: 25px;"
                                             data-bs-toggle="tooltip" 
-                                            title="Rp <?php echo e(number_format($pendapatan, 0, ',', '.')); ?>"
+                                            title="<?php echo e($bulan[$index]); ?>: Rp <?php echo e(number_format($pendapatan, 0, ',', '.')); ?>"
                                         ></div>
-                                        <small class="text-muted mt-2"><?php echo e($bulan[$index]); ?></small>
+                                        <small class="text-muted mt-1"><?php echo e($bulan[$index]); ?></small>
                                     </div>
                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </div>
                         </div>
                         
-                        <div class="mt-4 text-center">
+                        <div class="mt-3 text-center">
                             <small class="text-muted">
-                                Total Pendapatan Tahun <?php echo e(date('Y')); ?>: 
+                                Total <?php echo e(date('Y')); ?>: 
                                 <strong class="text-success">Rp <?php echo e(number_format(array_sum($pendapatan_bulanan), 0, ',', '.')); ?></strong>
                             </small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Ringkasan Periode -->
-        <div class="orange-card">
-            <div class="card-body">
-                <h5 class="card-title text-white mb-4">
-                    <i class="fas fa-calendar-alt me-2 text-primary"></i>
-                    Ringkasan Periode
-                </h5>
-                
-                <div class="row text-center">
-                    <div class="col-md-3">
-                        <div class="border rounded p-3">
-                            <div class="text-success fw-bold fs-5">Rp <?php echo e(number_format($total_pendapatan, 0, ',', '.')); ?></div>
-                            <small class="text-muted">Pendapatan</small>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="border rounded p-3">
-                            <div class="text-primary fw-bold fs-5"><?php echo e($total_transaksi); ?></div>
-                            <small class="text-muted">Transaksi</small>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="border rounded p-3">
-                            <div class="text-warning fw-bold fs-5"><?php echo e($kendaraan_terpopuler->count()); ?></div>
-                            <small class="text-muted">Kendaraan Aktif</small>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="border rounded p-3">
-                            <div class="text-info fw-bold fs-5"><?php echo e($customer_teraktif->count()); ?></div>
-                            <small class="text-muted">Customer Aktif</small>
                         </div>
                     </div>
                 </div>
@@ -335,6 +289,14 @@
     
     .table-hover tbody tr:hover {
         background: rgba(255, 107, 53, 0.1) !important;
+    }
+    
+    .border-end {
+        border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
+    }
+    
+    .orange-card {
+        border: 1px solid rgba(255, 107, 53, 0.2);
     }
 </style>
 

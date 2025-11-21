@@ -1,4 +1,6 @@
 
+@var \Illuminate\Auth\AuthManager $auth 
+@var \Illuminate\Contracts\Auth\Factory $auth 
 
 <?php $__env->startSection('title', 'Dashboard - SpeedRent'); ?>
 
@@ -16,6 +18,7 @@
                                     <div class="car-icon mb-2">
                                         <i class="fas fa-tachometer-alt fa-2x"></i>
                                     </div>
+
                                     <h4 class="logo-text mb-2">Selamat Datang, <?php echo e(Auth::user()->nama_user); ?>! 👋</h4>
                                     <p class="auth-subtitle mb-0">
                                         <?php if(Auth::user()->role === 'admin'): ?>

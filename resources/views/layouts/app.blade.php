@@ -17,6 +17,24 @@
             --sidebar-width: 280px;
             --sidebar-collapsed: 80px;
         }
+
+        /* TAMBAHKAN INI DI BAGIAN UTAMA CSS */
+
+        .top-navbar {
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+
+        .main-content {
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .content-wrapper {
+            height: 100%;
+            overflow-y: auto;
+        }
         
         /* Global Background */
         .orange-bg {
@@ -174,14 +192,20 @@
             padding: 1rem 0;
         }
         
+        /* Content Wrapper - DIPERBAIKI */
+        .content-wrapper {
+            padding: 2rem 0;
+        }
+        
         /* Auth Pages */
         .auth-container {
             min-height: calc(100vh - 80px);
             display: flex;
             align-items: center;
+            padding: 2rem 0;
         }
         
-        /* Card Styles */
+        /* Card Styles - DIPERBAIKI */
         .orange-card {
             border: none;
             border-radius: 12px;
@@ -190,6 +214,7 @@
             border: 1px solid rgba(255, 107, 53, 0.2);
             position: relative;
             overflow: hidden;
+            margin-bottom: 1.5rem;
         }
         
         .orange-card::before {
@@ -202,12 +227,16 @@
             background: linear-gradient(90deg, var(--orange) 0%, var(--orange-light) 100%);
         }
         
+        .orange-card .card-body {
+            padding: 2rem;
+        }
+        
         /* Button Styles */
         .btn-orange-primary {
             background: linear-gradient(135deg, var(--orange) 0%, var(--orange-light) 100%);
             border: none;
             border-radius: 8px;
-            padding: 10px 25px;
+            padding: 12px 25px;
             font-weight: 600;
             color: var(--white);
             transition: all 0.3s ease;
@@ -223,7 +252,7 @@
             background: transparent;
             border: 2px solid var(--orange);
             border-radius: 8px;
-            padding: 8px 20px;
+            padding: 10px 20px;
             font-weight: 600;
             color: var(--orange);
             transition: all 0.3s ease;
@@ -235,14 +264,15 @@
             transform: translateY(-2px);
         }
         
-        /* Form Styles */
+        /* Form Styles - DIPERBAIKI */
         .form-control {
             border-radius: 8px;
             border: 2px solid rgba(255, 255, 255, 0.1);
-            padding: 10px 15px;
+            padding: 12px 15px;
             transition: all 0.3s ease;
             background: rgba(255, 255, 255, 0.05);
             color: var(--white);
+            margin-bottom: 1.25rem;
         }
         
         .form-control:focus {
@@ -254,6 +284,13 @@
         
         .form-control::placeholder {
             color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .form-label {
+            color: var(--white);
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            display: block;
         }
         
         /* Text Styles */
@@ -270,16 +307,17 @@
             color: var(--orange) !important;
         }
         
-        /* Dashboard Specific */
+        /* Dashboard Specific - DIPERBAIKI */
         .dashboard-container {
             background: linear-gradient(135deg, var(--black) 0%, var(--dark) 100%);
             min-height: 100vh;
-            padding: 20px 0;
+            padding: 2rem 0;
         }
         
         .stat-card {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             border: none;
+            margin-bottom: 1.5rem;
         }
         
         .stat-card:hover {
@@ -287,7 +325,11 @@
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
         }
         
-        /* Table Styles */
+        .stat-card .card-body {
+            padding: 2rem 1.5rem;
+        }
+        
+        /* Table Styles - DIPERBAIKI */
         .table-dark {
             background: transparent;
             border-color: rgba(255, 255, 255, 0.1);
@@ -297,11 +339,15 @@
         .table-dark td {
             border-color: rgba(255, 255, 255, 0.1);
             color: var(--white);
+            padding: 1rem 0.75rem;
+            vertical-align: middle;
         }
         
         .table-dark thead th {
             background: rgba(255, 255, 255, 0.05);
             color: rgba(255, 255, 255, 0.8);
+            padding: 1rem 0.75rem;
+            font-weight: 600;
         }
         
         /* Badge Styles */
@@ -314,6 +360,8 @@
         .bg-primary { background-color: #4299e1 !important; }
         .bg-success { background-color: #48bb78 !important; }
         .bg-warning { background-color: #ed8936 !important; }
+        .bg-danger { background-color: #f56565 !important; }
+        .bg-info { background-color: #38b2ac !important; }
         
         /* Labels & Links */
         label {
@@ -363,9 +411,63 @@
             flex: 1;
         }
         
+        /* Alert Styles - DIPERBAIKI */
+        .alert {
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            padding: 1rem 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .alert-success {
+            background-color: rgba(40, 167, 69, 0.2);
+            color: #75b798;
+            border-left: 4px solid #28a745;
+        }
+        
+        .alert-danger {
+            background-color: rgba(220, 53, 69, 0.2);
+            color: #ea868f;
+            border-left: 4px solid #dc3545;
+        }
+        
+        .alert .btn-close {
+            filter: invert(1);
+            padding: 0.75rem;
+        }
+        
+        /* Button Groups - DIPERBAIKI */
+        .btn-group-sm > .btn {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.875rem;
+            margin: 0 2px;
+        }
+        
         /* Tooltip for collapsed sidebar */
         .nav-link[data-bs-toggle="tooltip"] {
             position: relative;
+        }
+        
+        /* Additional Spacing Utilities */
+        .mb-4 {
+            margin-bottom: 2rem !important;
+        }
+        
+        .mb-3 {
+            margin-bottom: 1.5rem !important;
+        }
+        
+        .mt-4 {
+            margin-top: 2rem !important;
+        }
+        
+        .pt-4 {
+            padding-top: 2rem !important;
+        }
+        
+        .pb-4 {
+            padding-bottom: 2rem !important;
         }
         
         /* Responsive */
@@ -390,6 +492,37 @@
             .sidebar.collapsed {
                 transform: translateX(-100%);
             }
+            
+            .content-wrapper {
+                padding: 1rem 0;
+            }
+            
+            .orange-card .card-body {
+                padding: 1.5rem;
+            }
+            
+            .dashboard-container {
+                padding: 1rem 0;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .orange-card .card-body {
+                padding: 1rem;
+            }
+            
+            .form-control {
+                padding: 10px 12px;
+                margin-bottom: 1rem;
+            }
+            
+            .btn-orange-primary,
+            .btn-orange-outline {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+
+            
         }
     </style>
 </head>
@@ -462,7 +595,7 @@
                     </li>
                     
                     <li class="nav-item">
-                        <a href="#" class="nav-link">
+                        <a href="{{ route('admin.users') }}" class="nav-link {{ request()->routeIs('admin.users*') ? 'active' : '' }}">
                             <i class="fas fa-users"></i>
                             <span>Manajemen User</span>
                         </a>
@@ -503,9 +636,9 @@
                         <!-- User Actions -->
                         <div class="navbar-nav ms-auto">
                             @auth
-                                <span class="navbar-text me-3 d-none d-md-block">
+                                {{-- <span class="navbar-text me-3 d-none d-md-block">
                                     <i class="fas fa-user me-1"></i> {{ Auth::user()->nama_user }}
-                                </span>
+                                </span> --}}
                                 <form action="{{ route('logout') }}" method="POST" class="d-inline">
                                     @csrf
                                     <button type="submit" class="btn btn-orange-outline btn-sm">
@@ -527,7 +660,9 @@
 
             <!-- Content Area -->
             <div class="content-wrapper">
-                @yield('content')
+                <div class="container-fluid">
+                    @yield('content')
+                </div>
             </div>
         </div>
     </div>
