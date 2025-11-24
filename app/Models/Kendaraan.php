@@ -48,4 +48,9 @@ class Kendaraan extends Model
         $color = $statuses[$this->status] ?? 'secondary';
         return '<span class="badge bg-' . $color . '">' . $this->status . '</span>';
     }
+
+    public function rentals()
+{
+    return $this->hasMany(Rental::class, 'id_kendaraan', 'id_kendaraan');
+}
 }

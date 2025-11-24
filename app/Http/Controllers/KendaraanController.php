@@ -88,4 +88,10 @@ class KendaraanController extends Controller
         return redirect()->route('admin.kendaraan')
             ->with('success', 'Kendaraan berhasil dihapus!');
     }
+
+    public function ownerIndex()
+    {
+        $kendaraans = Kendaraan::with(['kategori', 'harga'])->get();
+        return view('owner.kendaraan', compact('kendaraans'));
+    }
 }

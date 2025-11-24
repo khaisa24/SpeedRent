@@ -39,6 +39,8 @@ Route::middleware('auth')->group(function () {
     
     // Dashboard untuk semua user yang login
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('/dashboard', [DashboardController::class, 'ownerDashboard'])->name('dashboard');
     
     // Admin routes
     Route::prefix('admin')->name('admin.')->group(function () {
@@ -83,5 +85,15 @@ Route::middleware('auth')->group(function () {
         Route::post('/users', [UserController::class, 'store'])->name('users.store');
         Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
         Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+    });
+
+    // Owner routes
+    Route::prefix('owner')->name('owner.')->group(function () {
+        Route::get('/dashboard', [DashboardController::class, 'ownerDashboard'])->name('dashboard');
+        
+        // Tambahkan routes lain untuk owner
+        Route::get('/kategori', [KategoriController::class, 'ownerIndex'])->name('kategori');
+        Route::get('/kendaraan', [KendaraanController::class, 'ownerIndex'])->name('kendaraan');
+        Route::get('/laporan', [LaporanController::class, 'ownerIndex'])->name('laporan');
     });
 });

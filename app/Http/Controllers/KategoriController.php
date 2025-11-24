@@ -48,4 +48,10 @@ class KategoriController extends Controller
         return redirect()->route('admin.kategori')
             ->with('success', 'Kategori berhasil dihapus!');
     }
+
+    public function ownerIndex()
+    {
+        $kategoris = Kategori::all();
+        return view('owner.kategori', compact('kategoris'));
+    }
 }

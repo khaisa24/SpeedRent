@@ -115,4 +115,36 @@ class LaporanController extends Controller
         return redirect()->route('admin.laporan')
             ->with('success', 'Fitur export akan segera tersedia!');
     }
+
+    public function ownerIndex(Request $request)
+    {
+        // Ambil periode dari request atau set default
+        $periode = $request->input('periode', 'bulan_ini');
+        
+        // Set tanggal berdasarkan periode
+        $startDate = $request->input('start_date', Carbon::now()->startOfMonth()->format('Y-m-d'));
+        $endDate = $request->input('end_date', Carbon::now()->format('Y-m-d'));
+    
+        $rentals = Rental::with(['user', 'kendaraan', 'pembayaran'])
+            ->whereBetween('created_at', [$startDate, Carbon::parse($endDate)->endOfDay()])
+            ->orderBy('created_at', 'desc')
+            ->get();
+    
+        $totalPendapatan = Pembayaran::whereBetween('created_at', [$startDate, Carbon::parse($endDate)->endOfDay()])
+            ->sum('jumlah_bayar');
+    
+        // Data dasar untuk view
+        $total_transaksi = $rentals->count();
+        $rata_rata_sewa = $total_transaksi > 0 ? $totalPendapatan / $total_transaksi : 0;
+    
+        return view('owner.laporan', compact(
+            'rentals', 
+            'totalPendapatan', 
+            'startDate', 
+            'endDate',
+            'periode',
+            'total_transaksi',
+            'rata_rata_sewa'
+        ));
+    }
 }

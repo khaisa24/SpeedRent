@@ -1,15 +1,15 @@
-@extends('layouts.app')
 
-@section('title', 'Dashboard - SpeedRent')
 
-@section('content')
+<?php $__env->startSection('title', 'Dashboard - SpeedRent'); ?>
+
+<?php $__env->startSection('content'); ?>
 <div class="container mt-4">
     <!-- Welcome Card -->
     <div class="card welcome-card mb-4">
         <div class="card-body">
             <div class="row align-items-center">
                 <div class="col-md-8">
-                    <h3>Selamat datang, {{ Auth::user()->nama_user }}! 🎉</h3>
+                    <h3>Selamat datang, <?php echo e(Auth::user()->nama_user); ?>! 🎉</h3>
                     <p class="mb-0 opacity-75">Siap menyewa mobil impian Anda?</p>
                 </div>
                 <div class="col-md-4 text-end">
@@ -20,7 +20,7 @@
     </div>
 
     <!-- User Statistics -->
-    @if(isset($total_rental_saya))
+    <?php if(isset($total_rental_saya)): ?>
     <div class="row mb-4">
         <div class="col-md-3 mb-3">
             <div class="card stats-card">
@@ -28,7 +28,7 @@
                     <div class="stats-icon mx-auto" style="background: #28a745;">
                         <i class="fas fa-list-alt"></i>
                     </div>
-                    <h4 class="text-white mb-1">{{ $total_rental_saya }}</h4>
+                    <h4 class="text-white mb-1"><?php echo e($total_rental_saya); ?></h4>
                     <h6 class="text-white mb-1">Total Rental</h6>
                     <p class="text-white mb-0 small">Semua waktu</p>
                 </div>
@@ -40,7 +40,7 @@
                     <div class="stats-icon mx-auto" style="background: #ffc107;">
                         <i class="fas fa-clock"></i>
                     </div>
-                    <h4 class="text-white mb-1">{{ $rental_pending }}</h4>
+                    <h4 class="text-white mb-1"><?php echo e($rental_pending); ?></h4>
                     <h6 class="text-white mb-1">Pending</h6>
                     <p class="text-white mb-0 small">Menunggu konfirmasi</p>
                 </div>
@@ -52,7 +52,7 @@
                     <div class="stats-icon mx-auto" style="background: #17a2b8;">
                         <i class="fas fa-play-circle"></i>
                     </div>
-                    <h4 class="text-white mb-1">{{ $rental_berjalan }}</h4>
+                    <h4 class="text-white mb-1"><?php echo e($rental_berjalan); ?></h4>
                     <h6 class="text-white mb-1">Berjalan</h6>
                     <p class="text-white mb-0 small">Sedang disewa</p>
                 </div>
@@ -64,14 +64,14 @@
                     <div class="stats-icon mx-auto" style="background: #6f42c1;">
                         <i class="fas fa-check-circle"></i>
                     </div>
-                    <h4 class="text-white mb-1">{{ $rental_selesai }}</h4>
+                    <h4 class="text-white mb-1"><?php echo e($rental_selesai); ?></h4>
                     <h6 class="text-white mb-1">Selesai</h6>
                     <p class="text-white mb-0 small">Rental completed</p>
                 </div>
             </div>
         </div>
     </div>
-    @endif
+    <?php endif; ?>
 
     <!-- Stats Cards -->
     <div class="row mb-4">
@@ -111,7 +111,7 @@
     </div>
 
     <!-- Recent Rentals -->
-    @if(isset($my_recent_rentals) && $my_recent_rentals->count() > 0)
+    <?php if(isset($my_recent_rentals) && $my_recent_rentals->count() > 0): ?>
     <div class="row mb-4">
         <div class="col-md-12">
             <div class="card stats-card">
@@ -129,27 +129,27 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($my_recent_rentals as $rental)
+                                <?php $__currentLoopData = $my_recent_rentals; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $rental): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <tr>
-                                    <td>{{ $rental->kendaraan->nama_mobil ?? 'N/A' }}</td>
-                                    <td>{{ $rental->tanggal_sewa }}</td>
-                                    <td>{{ $rental->tanggal_kembali }}</td>
+                                    <td><?php echo e($rental->kendaraan->nama_mobil ?? 'N/A'); ?></td>
+                                    <td><?php echo e($rental->tanggal_sewa); ?></td>
+                                    <td><?php echo e($rental->tanggal_kembali); ?></td>
                                     <td>
-                                        @if($rental->status_sewa == 'pending')
+                                        <?php if($rental->status_sewa == 'pending'): ?>
                                             <span class="badge bg-warning">Pending</span>
-                                        @elseif($rental->status_sewa == 'berlangsung')
+                                        <?php elseif($rental->status_sewa == 'berlangsung'): ?>
                                             <span class="badge bg-info">Berjalan</span>
-                                        @elseif($rental->status_sewa == 'selesai')
+                                        <?php elseif($rental->status_sewa == 'selesai'): ?>
                                             <span class="badge bg-success">Selesai</span>
-                                        @else
-                                            <span class="badge bg-secondary">{{ $rental->status_sewa }}</span>
-                                        @endif
+                                        <?php else: ?>
+                                            <span class="badge bg-secondary"><?php echo e($rental->status_sewa); ?></span>
+                                        <?php endif; ?>
                                     </td>
                                     <td>
                                         <a href="#" class="btn btn-orange-outline btn-sm">Detail</a>
                                     </td>
                                 </tr>
-                                @endforeach
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </tbody>
                         </table>
                     </div>
@@ -157,7 +157,7 @@
             </div>
         </div>
     </div>
-    @else
+    <?php else: ?>
     <div class="row mb-4">
         <div class="col-md-12">
             <div class="card stats-card">
@@ -165,14 +165,12 @@
                     <i class="fas fa-car fa-3x mb-3 opacity-50"></i>
                     <h5 class="text-white">Belum ada riwayat rental</h5>
                     <p class="text-white opacity-75 mb-3">Mulai sewa mobil pertama Anda sekarang!</p>
-                    {{-- <a href="{{ route('kendaraan') }}" class="btn btn-orange-primary">
-                        <i class="fas fa-search me-1"></i>Lihat Kendaraan
-                    </a> --}}
+                    
                 </div>
             </div>
         </div>
     </div>
-    @endif
+    <?php endif; ?>
 
     <!-- Profile Info -->
     <div class="row">
@@ -182,12 +180,12 @@
                     <h6 class="text-white mb-3"><i class="fas fa-user-circle me-2"></i>Informasi Profil</h6>
                     <div class="row">
                         <div class="col-md-6">
-                            <p class="mb-2 small"><strong>Nama:</strong> {{ Auth::user()->nama_user }}</p>
-                            <p class="mb-2 small"><strong>Email:</strong> {{ Auth::user()->email }}</p>
+                            <p class="mb-2 small"><strong>Nama:</strong> <?php echo e(Auth::user()->nama_user); ?></p>
+                            <p class="mb-2 small"><strong>Email:</strong> <?php echo e(Auth::user()->email); ?></p>
                         </div>
                         <div class="col-md-6">
                             <p class="mb-2 small"><strong>Role:</strong> 
-                                <span class="badge">{{ ucfirst(Auth::user()->role) }}</span>
+                                <span class="badge"><?php echo e(ucfirst(Auth::user()->role)); ?></span>
                             </p>
                             <p class="mb-0 small"><strong>Status:</strong> <span class="badge bg-success">Aktif</span></p>
                         </div>
@@ -241,4 +239,5 @@
         color: var(--white);
     }
 </style>
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\laragon\www\SpeedRent\resources\views/dashboard.blade.php ENDPATH**/ ?>
