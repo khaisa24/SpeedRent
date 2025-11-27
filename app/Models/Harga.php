@@ -28,4 +28,16 @@ class Harga extends Model
     {
         return $this->belongsTo(Kendaraan::class, 'id_kendaraan', 'id_kendaraan');
     }
+
+    // Accessor untuk format harga
+    public function getHargaFormattedAttribute()
+    {
+        return 'Rp ' . number_format($this->harga_perhari, 0, ',', '.');
+    }
+
+    // Scope untuk harga aktif
+    public function scopeAktif($query)
+    {
+        return $query->where('tanggal_berlaku', '<=', now());
+    }
 }

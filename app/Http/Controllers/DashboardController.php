@@ -6,6 +6,7 @@ use App\Models\Kendaraan;
 use App\Models\Rental;
 use App\Models\Harga;
 use App\Models\Pembayaran;
+use App\Models\Kategori;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -65,17 +66,19 @@ class DashboardController extends Controller
     {
         try {
             Log::info('Loading owner dashboard...');
-
+    
             // Statistics untuk owner
             $total_kendaraan = Kendaraan::count();
             $total_users = User::where('role', 'user')->count();
             $total_admin = User::where('role', 'admin')->count();
             
+            $available_vehicles_count = Kendaraan::where('status', 'Tersedia')->count();
+            
             $rental_aktif = Rental::whereIn('status_sewa', ['pending', 'berlangsung'])->count();
             $pending_requests = Rental::where('status_sewa', 'pending')->count();
             $rental_selesai = Rental::where('status_sewa', 'selesai')->count();
             
-            // Pendapatan bulan ini - dengan error handling
+            // Pendapatan bulan ini
             $pendapatan_bulan_ini = 0;
             try {
                 $pendapatan_bulan_ini = Pembayaran::whereMonth('created_at', now()->month)
@@ -84,38 +87,59 @@ class DashboardController extends Controller
             } catch (\Exception $e) {
                 Log::warning('Error calculating income: ' . $e->getMessage());
             }
-
+    
+            // Ambil data kategori dengan count yang benar
+            $kategoris = Kategori::withCount('kendaraans')->get();
+    
+            // Kendaraan Populer
+            $popular_vehicles = Kendaraan::with(['harga'])
+                ->where('status', 'Tersedia')
+                ->limit(4)
+                ->get()
+                ->map(function($vehicle) {
+                    $vehicle->rental_count = Rental::where('id_kendaraan', $vehicle->id_kendaraan)
+                        ->where('status_sewa', 'selesai')
+                        ->count();
+                    return $vehicle;
+                })
+                ->sortByDesc('rental_count')
+                ->values();
+    
             // Recent rentals
             $recent_rentals = Rental::with(['user', 'kendaraan'])
                 ->orderBy('created_at', 'desc')
                 ->limit(5)
                 ->get();
-
-            // Available vehicles
-            $available_vehicles = Harga::with('kendaraan')->limit(5)->get();
-
+    
             Log::info('Owner dashboard data loaded successfully');
-
+    
             return view('owner.dashboard', compact(
                 'total_kendaraan',
                 'total_users',
                 'total_admin',
+                'available_vehicles_count',
                 'rental_aktif', 
                 'pending_requests',
                 'rental_selesai',
                 'pendapatan_bulan_ini',
                 'recent_rentals',
-                'available_vehicles'
+                'popular_vehicles',
+                'kategoris'
             ));
-
+    
         } catch (\Exception $e) {
             Log::error('Error in ownerDashboard: ' . $e->getMessage());
             Log::error('Stack trace: ' . $e->getTraceAsString());
-            return response()->view('errors.500', ['error' => $e->getMessage()], 500);
+            
+            return response()->view('errors.error', [
+                'message' => 'Terjadi kesalahan saat memuat dashboard.',
+                'error' => $e->getMessage()
+            ], 500);
         }
     }
 
-    private function userDashboard()
+    // === PERBAIKAN: UBAH DARI PRIVATE KE PUBLIC ===
+    public function userDashboard()
     {
         try {
             $user = Auth::user();

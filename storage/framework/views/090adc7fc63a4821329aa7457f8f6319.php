@@ -1,9 +1,9 @@
-@extends('layouts.loginregister')
 
-@section('title', 'Register - SpeedRent')
-@section('auth-subtitle', 'Bergabung dengan SpeedRent')
 
-@section('content')
+<?php $__env->startSection('title', 'Register - SpeedRent'); ?>
+<?php $__env->startSection('auth-subtitle', 'Bergabung dengan SpeedRent'); ?>
+
+<?php $__env->startSection('content'); ?>
 <div class="auth-container">
 
     <nav class="navbar navbar-expand-lg nav-hero">
@@ -14,13 +14,13 @@
                 </span>
             </a>
             <div class="navbar-nav ms-auto">
-                <a href="{{ route('login') }}" class="btn btn-orange-outline btn-sm me-2">
+                <a href="<?php echo e(route('login')); ?>" class="btn btn-orange-outline btn-sm me-2">
                     <i class="fas fa-sign-in-alt me-1"></i>Login
                 </a>
-                <a href="{{ route('register') }}" class="btn btn-orange-primary btn-sm">
+                <a href="<?php echo e(route('register')); ?>" class="btn btn-orange-primary btn-sm">
                     <i class="fas fa-user-plus me-1"></i>Register
                 </a>
-                <a href="{{ route('home') }}" class="btn btn-orange-primary btn-sm">
+                <a href="<?php echo e(route('home')); ?>" class="btn btn-orange-primary btn-sm">
                     <i class="fas fa-home me-1"></i>Home
                 </a>
             </div>
@@ -42,36 +42,44 @@
                             <p class="auth-subtitle mb-0">Bergabung dengan SpeedRent</p>
                         </div>
 
-                        @if(session('success'))
+                        <?php if(session('success')): ?>
                             <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
                                 <i class="fas fa-check-circle me-2"></i>
-                                {{ session('success') }}
+                                <?php echo e(session('success')); ?>
+
                                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                             </div>
-                        @endif
+                        <?php endif; ?>
 
-                        @if($errors->any())
+                        <?php if($errors->any()): ?>
                             <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
                                 <i class="fas fa-exclamation-triangle me-2"></i>
-                                @foreach($errors->all() as $error)
-                                    <div class="small">{{ $error }}</div>
-                                @endforeach
+                                <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <div class="small"><?php echo e($error); ?></div>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                             </div>
-                        @endif
+                        <?php endif; ?>
 
-                        <form action="{{ route('register') }}" method="POST">
-                            @csrf
+                        <form action="<?php echo e(route('register')); ?>" method="POST">
+                            <?php echo csrf_field(); ?>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label for="nama_user" class="form-label">Nama Lengkap</label>
                                         <input type="text" class="form-control" id="nama_user" name="nama_user" 
-                                               value="{{ old('nama_user') }}" required autofocus
+                                               value="<?php echo e(old('nama_user')); ?>" required autofocus
                                                placeholder="Nama lengkap">
-                                        @error('nama_user')
-                                            <div class="text-danger">{{ $message }}</div>
-                                        @enderror
+                                        <?php $__errorArgs = ['nama_user'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                            <div class="text-danger"><?php echo e($message); ?></div>
+                                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                     </div>
                                 </div>
 
@@ -79,11 +87,18 @@
                                     <div class="mb-3">
                                         <label for="email" class="form-label">Email</label>
                                         <input type="email" class="form-control" id="email" name="email" 
-                                               value="{{ old('email') }}" required
+                                               value="<?php echo e(old('email')); ?>" required
                                                placeholder="email@contoh.com">
-                                        @error('email')
-                                            <div class="text-danger">{{ $message }}</div>
-                                        @enderror
+                                        <?php $__errorArgs = ['email'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                            <div class="text-danger"><?php echo e($message); ?></div>
+                                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                     </div>
                                 </div>
                             </div>
@@ -94,9 +109,16 @@
                                         <label for="password" class="form-label">Password</label>
                                         <input type="password" class="form-control" id="password" name="password" required
                                                placeholder="Minimal 8 karakter">
-                                        @error('password')
-                                            <div class="text-danger">{{ $message }}</div>
-                                        @enderror
+                                        <?php $__errorArgs = ['password'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                            <div class="text-danger"><?php echo e($message); ?></div>
+                                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                     </div>
                                 </div>
 
@@ -116,9 +138,16 @@
                                     <label class="form-check-label" for="terms">
                                         Saya menyetujui Syarat & Ketentuan
                                     </label>
-                                    @error('terms')
-                                        <div class="text-danger">{{ $message }}</div>
-                                    @enderror
+                                    <?php $__errorArgs = ['terms'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                        <div class="text-danger"><?php echo e($message); ?></div>
+                                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                 </div>
                             </div>
 
@@ -128,7 +157,7 @@
                             
                             <div class="text-center">
                                 <p class="mb-0 auth-text-muted">Sudah punya akun? 
-                                    <a href="{{ route('login') }}" class="auth-link">
+                                    <a href="<?php echo e(route('login')); ?>" class="auth-link">
                                         Login di sini
                                     </a>
                                 </p>
@@ -140,4 +169,5 @@
         </div>
     </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.loginregister', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\laragon\www\SpeedRent\resources\views/auth/register.blade.php ENDPATH**/ ?>

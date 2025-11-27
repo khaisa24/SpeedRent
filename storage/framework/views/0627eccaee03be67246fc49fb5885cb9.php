@@ -1,23 +1,25 @@
-@extends('layouts.app')
 
-@section('title', 'Manajemen Kendaraan')
 
-@section('content')
+<?php $__env->startSection('title', 'Manajemen Kendaraan'); ?>
+
+<?php $__env->startSection('content'); ?>
 <div class="container py-4">
     <!-- Alert Messages -->
-    @if(session('success'))
+    <?php if(session('success')): ?>
         <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
+            <i class="fas fa-check-circle me-2"></i><?php echo e(session('success')); ?>
 
-    @if(session('error'))
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <i class="fas fa-exclamation-circle me-2"></i>{{ session('error') }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-    @endif
+    <?php endif; ?>
+
+    <?php if(session('error')): ?>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i><?php echo e(session('error')); ?>
+
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <?php endif; ?>
 
     <!-- Daftar Kendaraan (CARD DI ATAS) -->
     <div class="row mb-5">
@@ -28,70 +30,76 @@
                         <i class="fas fa-car-side me-2"></i>Daftar Kendaraan
                     </h3>
                     <span class="badge bg-orange px-3 py-2">
-                        Total: {{ $kendaraans->count() }} Kendaraan
+                        Total: <?php echo e($kendaraans->count()); ?> Kendaraan
                     </span>
                 </div>
                 
-                @if($kendaraans->count() > 0)
+                <?php if($kendaraans->count() > 0): ?>
                     <div class="kendaraan-grid">
-                        @foreach($kendaraans as $kendaraan)
+                        <?php $__currentLoopData = $kendaraans; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $kendaraan): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <div class="kendaraan-item">
                             <div class="kendaraan-card">
                                 <div class="kendaraan-image">
-                                    <img src="{{ $kendaraan->foto ? asset('storage/' . $kendaraan->foto) : 'https://via.placeholder.com/300x200/1a1a1a/FF6B35?text=No+Image' }}" 
-                                         alt="{{ $kendaraan->nama_kendaraan }}"
+                                    <img src="<?php echo e($kendaraan->foto ? asset('storage/' . $kendaraan->foto) : 'https://via.placeholder.com/300x200/1a1a1a/FF6B35?text=No+Image'); ?>" 
+                                         alt="<?php echo e($kendaraan->nama_kendaraan); ?>"
                                          onerror="this.src='https://via.placeholder.com/300x200/1a1a1a/FF6B35?text=No+Image'">
                                     <div class="kendaraan-status">
-                                        {!! $kendaraan->status_badge !!}
+                                        <?php echo $kendaraan->status_badge; ?>
+
                                     </div>
                                     <div class="kendaraan-category">
-                                        <span class="badge bg-dark">{{ $kendaraan->kategori->nama_kategori ?? 'No Category' }}</span>
+                                        <span class="badge bg-dark"><?php echo e($kendaraan->kategori->nama_kategori ?? 'No Category'); ?></span>
                                     </div>
                                 </div>
                                 <div class="kendaraan-info">
-                                    <h5 class="kendaraan-title">{{ $kendaraan->nama_kendaraan }}</h5>
+                                    <h5 class="kendaraan-title"><?php echo e($kendaraan->nama_kendaraan); ?></h5>
                                     <div class="kendaraan-details">
                                         <div class="kendaraan-brand">
-                                            <i class="fas fa-tag me-1"></i>{{ $kendaraan->merek }}
+                                            <i class="fas fa-tag me-1"></i><?php echo e($kendaraan->merek); ?>
+
                                         </div>
                                         <div class="kendaraan-type">
-                                            <i class="fas fa-list me-1"></i>{{ $kendaraan->kategori->jenis ?? 'N/A' }}
+                                            <i class="fas fa-list me-1"></i><?php echo e($kendaraan->kategori->jenis ?? 'N/A'); ?>
+
                                         </div>
                                         <div class="kendaraan-specs">
                                             <span class="spec-item">
-                                                <i class="fas fa-palette me-1"></i>{{ $kendaraan->warna }}
+                                                <i class="fas fa-palette me-1"></i><?php echo e($kendaraan->warna); ?>
+
                                             </span>
                                             <span class="spec-item">
-                                                <i class="fas fa-id-card me-1"></i>{{ $kendaraan->plat_nomor }}
+                                                <i class="fas fa-id-card me-1"></i><?php echo e($kendaraan->plat_nomor); ?>
+
                                             </span>
                                             <span class="spec-item">
-                                                <i class="fas fa-users me-1"></i>{{ $kendaraan->kapasitas }} Org
+                                                <i class="fas fa-users me-1"></i><?php echo e($kendaraan->kapasitas); ?> Org
                                             </span>
                                             <span class="spec-item">
-                                                <i class="fas fa-gas-pump me-1"></i>{{ $kendaraan->bahan_bakar }}
+                                                <i class="fas fa-gas-pump me-1"></i><?php echo e($kendaraan->bahan_bakar); ?>
+
                                             </span>
                                         </div>
                                     </div>
-                                    <p class="kendaraan-description">{{ Str::limit($kendaraan->deskripsi, 120) }}</p>
+                                    <p class="kendaraan-description"><?php echo e(Str::limit($kendaraan->deskripsi, 120)); ?></p>
                                     <div class="kendaraan-actions">
                                         <button class="btn btn-sm btn-orange-outline edit-btn" 
-                                                data-id="{{ $kendaraan->id_kendaraan }}"
-                                                data-nama="{{ $kendaraan->nama_kendaraan }}"
-                                                data-merek="{{ $kendaraan->merek }}"
-                                                data-kategori="{{ $kendaraan->id_kategori }}"
-                                                data-deskripsi="{{ $kendaraan->deskripsi }}"
-                                                data-warna="{{ $kendaraan->warna }}"
-                                                data-plat_nomor="{{ $kendaraan->plat_nomor }}"
-                                                data-kapasitas="{{ $kendaraan->kapasitas }}"
-                                                data-bahan_bakar="{{ $kendaraan->bahan_bakar }}"
-                                                data-status="{{ $kendaraan->status }}"
-                                                data-foto="{{ $kendaraan->foto }}">
+                                                data-id="<?php echo e($kendaraan->id_kendaraan); ?>"
+                                                data-nama="<?php echo e($kendaraan->nama_kendaraan); ?>"
+                                                data-merek="<?php echo e($kendaraan->merek); ?>"
+                                                data-kategori="<?php echo e($kendaraan->id_kategori); ?>"
+                                                data-deskripsi="<?php echo e($kendaraan->deskripsi); ?>"
+                                                data-warna="<?php echo e($kendaraan->warna); ?>"
+                                                data-plat_nomor="<?php echo e($kendaraan->plat_nomor); ?>"
+                                                data-kapasitas="<?php echo e($kendaraan->kapasitas); ?>"
+                                                data-bahan_bakar="<?php echo e($kendaraan->bahan_bakar); ?>"
+                                                data-status="<?php echo e($kendaraan->status); ?>"
+                                                data-foto="<?php echo e($kendaraan->foto); ?>">
                                             <i class="fas fa-edit me-1"></i>Edit
                                         </button>
-                                        <form action="{{ route('admin.kendaraan.destroy', $kendaraan->id_kendaraan) }}" 
+                                        <form action="<?php echo e(route('admin.kendaraan.destroy', $kendaraan->id_kendaraan)); ?>" 
                                               method="POST" class="d-inline">
-                                            @csrf
-                                            @method('DELETE')
+                                            <?php echo csrf_field(); ?>
+                                            <?php echo method_field('DELETE'); ?>
                                             <button type="submit" class="btn btn-sm btn-danger" 
                                                     onclick="return confirm('Yakin ingin menghapus kendaraan ini?')">
                                                 <i class="fas fa-trash me-1"></i>Hapus
@@ -101,15 +109,15 @@
                                 </div>
                             </div>
                         </div>
-                        @endforeach
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </div>
-                @else
+                <?php else: ?>
                     <div class="empty-state">
                         <i class="fas fa-car"></i>
                         <h4>Belum ada kendaraan</h4>
                         <p>Mulai dengan menambahkan kendaraan pertama Anda.</p>
                     </div>
-                @endif
+                <?php endif; ?>
             </div>
         </div>
     </div>
@@ -121,8 +129,8 @@
                 <h3 class="section-title">
                     <i class="fas fa-plus-circle me-2"></i>Tambah Kendaraan Baru
                 </h3>
-                <form action="{{ route('admin.kendaraan.store') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
+                <form action="<?php echo e(route('admin.kendaraan.store')); ?>" method="POST" enctype="multipart/form-data">
+                    <?php echo csrf_field(); ?>
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="nama_kendaraan" class="form-label">Nama Kendaraan</label>
@@ -141,11 +149,12 @@
                             <label for="id_kategori" class="form-label">Kategori & Jenis</label>
                             <select class="form-control dark-select" id="id_kategori" name="id_kategori" required>
                                 <option value="" disabled selected>Pilih Kategori & Jenis</option>
-                                @foreach($kategoris as $kategori)
-                                    <option value="{{ $kategori->id_kategori }}">
-                                        {{ $kategori->nama_kategori }} - {{ $kategori->jenis }}
+                                <?php $__currentLoopData = $kategoris; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $kategori): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($kategori->id_kategori); ?>">
+                                        <?php echo e($kategori->nama_kategori); ?> - <?php echo e($kategori->jenis); ?>
+
                                     </option>
-                                @endforeach
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
                             <small class="text-muted">Pilih kategori (Mobil/Motor) dan jenis kendaraan</small>
                         </div>
@@ -225,8 +234,8 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <form id="editKendaraanForm" method="POST" enctype="multipart/form-data">
-                @csrf
-                @method('PUT')
+                <?php echo csrf_field(); ?>
+                <?php echo method_field('PUT'); ?>
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-6 mb-3">
@@ -243,11 +252,12 @@
                         <div class="col-md-6 mb-3">
                             <label for="edit_id_kategori" class="form-label">Kategori & Jenis</label>
                             <select class="form-control dark-select" id="edit_id_kategori" name="id_kategori" required>
-                                @foreach($kategoris as $kategori)
-                                    <option value="{{ $kategori->id_kategori }}">
-                                        {{ $kategori->nama_kategori }} - {{ $kategori->jenis }}
+                                <?php $__currentLoopData = $kategoris; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $kategori): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($kategori->id_kategori); ?>">
+                                        <?php echo e($kategori->nama_kategori); ?> - <?php echo e($kategori->jenis); ?>
+
                                     </option>
-                                @endforeach
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
                         </div>
                         <div class="col-md-6 mb-3">
@@ -396,4 +406,5 @@
         });
     });
 </script>
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\laragon\www\SpeedRent\resources\views/admin/kendaraan.blade.php ENDPATH**/ ?>

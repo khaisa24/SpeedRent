@@ -12,12 +12,16 @@ class Kendaraan extends Model
     protected $table = 'kendaraan';
     protected $primaryKey = 'id_kendaraan';
     protected $fillable = [
-        'merek',
-        'foto', 
-        'deskripsi',
         'nama_kendaraan',
+        'merek',
         'id_kategori',
+        'deskripsi',
+        'warna',
+        'plat_nomor',
+        'kapasitas',
+        'bahan_bakar',
         'status',
+        'foto',
         'created_at',
         'updated_at'
     ];
@@ -30,27 +34,34 @@ class Kendaraan extends Model
         return $this->belongsTo(Kategori::class, 'id_kategori', 'id_kategori');
     }
 
+    // Relasi dengan harga
+    public function harga()
+    {
+        return $this->hasOne(Harga::class, 'id_kendaraan', 'id_kendaraan');
+    }
+
     // Accessor untuk foto URL
     public function getFotoUrlAttribute()
     {
         return $this->foto ? asset('storage/' . $this->foto) : asset('images/default-car.jpg');
     }
 
-    // Accessor untuk status badge
+    // Accessor untuk status badge - PASTIKAN INI BENAR
     public function getStatusBadgeAttribute()
     {
-        $statuses = [
-            'Tersedia' => 'success',
-            'Disewa' => 'warning',
-            'Maintenance' => 'danger'
+        $statusMap = [
+            'Tersedia' => ['label' => 'Tersedia', 'color' => 'success'],
+            'Disewa' => ['label' => 'Disewa', 'color' => 'warning'],
+            'Maintenance' => ['label' => 'Maintenance', 'color' => 'danger']
         ];
 
-        $color = $statuses[$this->status] ?? 'secondary';
-        return '<span class="badge bg-' . $color . '">' . $this->status . '</span>';
+        $config = $statusMap[$this->status] ?? ['label' => $this->status, 'color' => 'secondary'];
+        
+        return '<span class="badge bg-' . $config['color'] . '">' . $config['label'] . '</span>';
     }
 
     public function rentals()
-{
-    return $this->hasMany(Rental::class, 'id_kendaraan', 'id_kendaraan');
-}
+    {
+        return $this->hasMany(Rental::class, 'id_kendaraan', 'id_kendaraan');
+    }
 }

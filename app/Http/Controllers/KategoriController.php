@@ -51,7 +51,9 @@ class KategoriController extends Controller
 
     public function ownerIndex()
     {
-        $kategoris = Kategori::all();
+        // Hanya ambil data tanpa debugging
+        $kategoris = Kategori::withCount('kendaraans')->get();
+        
         return view('owner.kategori', compact('kategoris'));
     }
 }

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SpeedRent - @yield('title')</title>
+    <title>SpeedRent - <?php echo $__env->yieldContent('title'); ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -739,57 +739,57 @@
             <nav class="sidebar-menu">
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a href="{{ route('admin.dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                        <a href="<?php echo e(route('admin.dashboard')); ?>" class="nav-link <?php echo e(request()->routeIs('dashboard') ? 'active' : ''); ?>">
                             <i class="fas fa-tachometer-alt"></i>
                             <span>Dashboard</span>
                         </a>
                     </li>
                     
                     <li class="nav-item">
-                        <a href="{{ route('admin.kategori') }}" class="nav-link {{ request()->routeIs('kategori.*') ? 'active' : '' }}">
+                        <a href="<?php echo e(route('admin.kategori')); ?>" class="nav-link <?php echo e(request()->routeIs('kategori.*') ? 'active' : ''); ?>">
                             <i class="fas fa-tags"></i>
                             <span>Kategori</span>
                         </a>
                     </li>
                     
                     <li class="nav-item">
-                        <a href="{{ route('admin.kendaraan') }}" class="nav-link {{ request()->routeIs('admin.kendaraan.*') ? 'active' : '' }}">
+                        <a href="<?php echo e(route('admin.kendaraan')); ?>" class="nav-link <?php echo e(request()->routeIs('admin.kendaraan.*') ? 'active' : ''); ?>">
                             <i class="fas fa-car-side"></i>
                             <span>Kendaraan</span>
                         </a>
                     </li>
                     
                     <li class="nav-item">
-                        <a href="{{ route('admin.harga') }}" class="nav-link {{ request()->routeIs('admin.harga*') ? 'active' : '' }}">
+                        <a href="<?php echo e(route('admin.harga')); ?>" class="nav-link <?php echo e(request()->routeIs('admin.harga*') ? 'active' : ''); ?>">
                             <i class="fas fa-tag"></i>
                             <span>Harga</span>
                         </a>
                     </li>
                     
                     <li class="nav-item">
-                        <a href="{{ route('admin.rental') }}" class="nav-link {{ request()->routeIs('admin.rental*') ? 'active' : '' }}">
+                        <a href="<?php echo e(route('admin.rental')); ?>" class="nav-link <?php echo e(request()->routeIs('admin.rental*') ? 'active' : ''); ?>">
                             <i class="fas fa-clipboard-list"></i>
                             <span>Manajemen Rental</span>
-                            <span class="badge bg-primary">{{ $rental_aktif ?? 0 }}</span>
+                            <span class="badge bg-primary"><?php echo e($rental_aktif ?? 0); ?></span>
                         </a>
                     </li>
                     
                     <li class="nav-item">
-                        <a href="{{ route('admin.pembayaran') }}" class="nav-link {{ request()->routeIs('admin.pembayaran*') ? 'active' : '' }}">
+                        <a href="<?php echo e(route('admin.pembayaran')); ?>" class="nav-link <?php echo e(request()->routeIs('admin.pembayaran*') ? 'active' : ''); ?>">
                             <i class="fas fa-credit-card"></i>
                             <span>Pembayaran</span>
                         </a>
                     </li>
                     
                     <li class="nav-item">
-                        <a href="{{ route('admin.laporan') }}" class="nav-link {{ request()->routeIs('admin.laporan*') ? 'active' : '' }}">
+                        <a href="<?php echo e(route('admin.laporan')); ?>" class="nav-link <?php echo e(request()->routeIs('admin.laporan*') ? 'active' : ''); ?>">
                             <i class="fas fa-chart-bar"></i>
                             <span>Laporan</span>
                         </a>
                     </li>
                     
                     <li class="nav-item">
-                        <a href="{{ route('admin.users') }}" class="nav-link {{ request()->routeIs('admin.users*') ? 'active' : '' }}">
+                        <a href="<?php echo e(route('admin.users')); ?>" class="nav-link <?php echo e(request()->routeIs('admin.users*') ? 'active' : ''); ?>">
                             <i class="fas fa-users"></i>
                             <span>Manajemen User</span>
                         </a>
@@ -798,19 +798,20 @@
             </nav>
 
             <!-- User Info -->
-            @auth
+            <?php if(auth()->guard()->check()): ?>
             <div class="user-info">
                 <div class="d-flex align-items-center">
                     <div class="user-avatar">
-                        {{ strtoupper(substr(Auth::user()->nama_user, 0, 1)) }}
+                        <?php echo e(strtoupper(substr(Auth::user()->nama_user, 0, 1))); ?>
+
                     </div>
                     <div class="user-details">
-                        <div class="small fw-bold text-white">{{ Auth::user()->nama_user }}</div>
-                        <div class="small text-muted">{{ Auth::user()->role }}</div>
+                        <div class="small fw-bold text-white"><?php echo e(Auth::user()->nama_user); ?></div>
+                        <div class="small text-muted"><?php echo e(Auth::user()->role); ?></div>
                     </div>
                 </div>
             </div>
-            @endauth
+            <?php endif; ?>
         </aside>
 
         <!-- Main Content -->
@@ -825,28 +826,26 @@
                         </button>
                         
                         <!-- Page Title -->
-                        <h5 class="mb-0 text-white">@yield('title', 'Dashboard')</h5>
+                        <h5 class="mb-0 text-white"><?php echo $__env->yieldContent('title', 'Dashboard'); ?></h5>
                         
                         <!-- User Actions -->
                         <div class="navbar-nav ms-auto">
-                            @auth
-                                {{-- <span class="navbar-text me-3 d-none d-md-block">
-                                    <i class="fas fa-user me-1"></i> {{ Auth::user()->nama_user }}
-                                </span> --}}
-                                <form action="{{ route('logout') }}" method="POST" class="d-inline">
-                                    @csrf
+                            <?php if(auth()->guard()->check()): ?>
+                                
+                                <form action="<?php echo e(route('logout')); ?>" method="POST" class="d-inline">
+                                    <?php echo csrf_field(); ?>
                                     <button type="submit" class="btn btn-orange-outline btn-sm">
                                         <i class="fas fa-sign-out-alt me-1"></i>Logout
                                     </button>
                                 </form>
-                            @else
-                                <a href="{{ route('login') }}" class="btn btn-orange-outline btn-sm me-2">
+                            <?php else: ?>
+                                <a href="<?php echo e(route('login')); ?>" class="btn btn-orange-outline btn-sm me-2">
                                     <i class="fas fa-sign-in-alt me-1"></i>Login
                                 </a>
-                                <a href="{{ route('register') }}" class="btn btn-orange-primary btn-sm">
+                                <a href="<?php echo e(route('register')); ?>" class="btn btn-orange-primary btn-sm">
                                     <i class="fas fa-user-plus me-1"></i>Register
                                 </a>
-                            @endauth
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
@@ -855,7 +854,7 @@
             <!-- Content Area -->
             <div class="content-wrapper">
                 <div class="container-fluid">
-                    @yield('content')
+                    <?php echo $__env->yieldContent('content'); ?>
                 </div>
             </div>
         </div>
@@ -921,4 +920,4 @@
         });
     </script>
 </body>
-</html>
+</html><?php /**PATH C:\laragon\www\SpeedRent\resources\views/layouts/app.blade.php ENDPATH**/ ?>

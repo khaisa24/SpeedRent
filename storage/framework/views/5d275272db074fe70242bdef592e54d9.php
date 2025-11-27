@@ -1,8 +1,8 @@
-@extends('layouts.owner')
 
-@section('title', 'Dashboard - SpeedRent Owner')
 
-@section('content')
+<?php $__env->startSection('title', 'Dashboard - SpeedRent Owner'); ?>
+
+<?php $__env->startSection('content'); ?>
 <div class="dashboard-container">
     <div class="container-fluid py-4">
         <!-- Welcome Section -->
@@ -16,7 +16,7 @@
                                     <div class="car-icon mb-2">
                                         <i class="fas fa-crown fa-2x"></i>
                                     </div>
-                                    <h4 class="logo-text mb-2">Selamat Datang, Owner {{ Auth::user()->nama_user }}! 👑</h4>
+                                    <h4 class="logo-text mb-2">Selamat Datang, Owner <?php echo e(Auth::user()->nama_user); ?>! 👑</h4>
                                     <p class="auth-subtitle mb-0">
                                         Kelola bisnis rental kendaraan dengan mudah
                                     </p>
@@ -25,7 +25,8 @@
                             <div class="col-md-4 text-md-end">
                                 <div class="date-info small">
                                     <i class="fas fa-calendar-alt me-2"></i>
-                                    {{ now()->translatedFormat('l, d F Y') }}
+                                    <?php echo e(now()->translatedFormat('l, d F Y')); ?>
+
                                 </div>
                             </div>
                         </div>
@@ -43,7 +44,7 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <div class="small fw-semibold text-muted">Total Kendaraan</div>
-                                <div class="h4 fw-bold text-white">{{ $total_kendaraan ?? 0 }}</div>
+                                <div class="h4 fw-bold text-white"><?php echo e($total_kendaraan ?? 0); ?></div>
                             </div>
                             <div class="stat-icon">
                                 <i class="fas fa-car-side fa-2x text-orange"></i>
@@ -59,7 +60,7 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <div class="small fw-semibold text-muted">Total Customer</div>
-                                <div class="h4 fw-bold text-white">{{ $total_users ?? 0 }}</div>
+                                <div class="h4 fw-bold text-white"><?php echo e($total_users ?? 0); ?></div>
                             </div>
                             <div class="stat-icon">
                                 <i class="fas fa-users fa-2x text-orange"></i>
@@ -75,7 +76,7 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <div class="small fw-semibold text-muted">Kendaraan Tersedia</div>
-                                <div class="h4 fw-bold text-white">{{ $available_vehicles_count ?? 0 }}</div>
+                                <div class="h4 fw-bold text-white"><?php echo e($available_vehicles_count ?? 0); ?></div>
                             </div>
                             <div class="stat-icon">
                                 <i class="fas fa-key fa-2x text-orange"></i>
@@ -91,7 +92,7 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <div class="small fw-semibold text-muted">Pendapatan Bulan Ini</div>
-                                <div class="h4 fw-bold text-white">Rp {{ number_format($pendapatan_bulan_ini ?? 0, 0, ',', '.') }}</div>
+                                <div class="h4 fw-bold text-white">Rp <?php echo e(number_format($pendapatan_bulan_ini ?? 0, 0, ',', '.')); ?></div>
                             </div>
                             <div class="stat-icon">
                                 <i class="fas fa-money-bill-wave fa-2x text-orange"></i>
@@ -145,82 +146,87 @@
                         </span>
                     </div>
                     <div class="card-body">
-                        @if(isset($popular_vehicles) && $popular_vehicles->count() > 0)
+                        <?php if(isset($popular_vehicles) && $popular_vehicles->count() > 0): ?>
                             <div class="row">
-                                @foreach($popular_vehicles as $vehicle)
+                                <?php $__currentLoopData = $popular_vehicles; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $vehicle): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <div class="col-xl-3 col-md-4 col-sm-6 mb-4">
                                     <div class="card orange-card h-100 popular-vehicle-card">
                                         <div class="card-body text-center position-relative">
                                             <!-- Popular Badge -->
-                                            @if($loop->iteration <= 3)
+                                            <?php if($loop->iteration <= 3): ?>
                                             <div class="popular-badge position-absolute top-0 start-0 m-2">
                                                 <span class="badge bg-warning text-dark">
-                                                    <i class="fas fa-crown me-1"></i>#{{ $loop->iteration }}
+                                                    <i class="fas fa-crown me-1"></i>#<?php echo e($loop->iteration); ?>
+
                                                 </span>
                                             </div>
-                                            @endif
+                                            <?php endif; ?>
 
                                             <!-- Rental Count Badge -->
                                             <div class="rental-count position-absolute top-0 end-0 m-2">
                                                 <span class="badge bg-orange">
-                                                    <i class="fas fa-calendar-check me-1"></i>{{ $vehicle->rental_count ?? 0 }}
+                                                    <i class="fas fa-calendar-check me-1"></i><?php echo e($vehicle->rental_count ?? 0); ?>
+
                                                 </span>
                                             </div>
 
-                                            @if($vehicle->foto)
-                                                <img src="{{ asset('storage/' . $vehicle->foto) }}"
-                                                     alt="{{ $vehicle->nama_kendaraan }}"
+                                            <?php if($vehicle->foto): ?>
+                                                <img src="<?php echo e(asset('storage/' . $vehicle->foto)); ?>"
+                                                     alt="<?php echo e($vehicle->nama_kendaraan); ?>"
                                                      class="img-fluid rounded mb-3"
                                                      style="height: 120px; object-fit: cover; width: 100%;">
-                                            @else
+                                            <?php else: ?>
                                                 <div class="bg-dark rounded d-flex align-items-center justify-content-center mb-3"
                                                      style="height: 120px;">
                                                     <i class="fas fa-car fa-3x text-muted"></i>
                                                 </div>
-                                            @endif
+                                            <?php endif; ?>
                                             
-                                            <h6 class="fw-bold text-white mb-2">{{ $vehicle->nama_kendaraan ?? 'N/A' }}</h6>
+                                            <h6 class="fw-bold text-white mb-2"><?php echo e($vehicle->nama_kendaraan ?? 'N/A'); ?></h6>
                                             
                                             <div class="vehicle-info mb-3">
                                                 <div class="d-flex justify-content-between align-items-center mb-2">
                                                     <small class="text-muted">Plat:</small>
-                                                    <small class="text-white">{{ $vehicle->plat_nomor ?? '-' }}</small>
+                                                    <small class="text-white"><?php echo e($vehicle->plat_nomor ?? '-'); ?></small>
                                                 </div>
 
                                                 <div class="d-flex justify-content-between align-items-center mb-2">
                                                     <small class="text-muted">Total Disewa:</small>
-                                                    <span class="badge bg-info">{{ $vehicle->rental_count ?? 0 }}x</span>
+                                                    <span class="badge bg-info"><?php echo e($vehicle->rental_count ?? 0); ?>x</span>
                                                 </div>
                                             </div>
                                             
                                             <div class="d-flex justify-content-center">
                                                 <span class="badge bg-success">
-                                                    <i class="fas fa-car-side me-1"></i>{{ $vehicle->status ?? 'Tersedia' }}
+                                                    <i class="fas fa-car-side me-1"></i><?php echo e($vehicle->status ?? 'Tersedia'); ?>
+
                                                 </span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                @endforeach
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </div>
-                        @else
+                        <?php else: ?>
                         <!-- Fallback jika tidak ada data kendaraan populer -->
                         <div class="row">
-                            @for($i = 1; $i <= 4; $i++)
+                            <?php for($i = 1; $i <= 4; $i++): ?>
                             <div class="col-xl-3 col-md-4 col-sm-6 mb-4">
                                 <div class="card orange-card h-100 popular-vehicle-card">
                                     <div class="card-body text-center position-relative">
                                         <!-- Popular Badge -->
                                         <div class="popular-badge position-absolute top-0 start-0 m-2">
                                             <span class="badge bg-warning text-dark">
-                                                <i class="fas fa-crown me-1"></i>#{{ $i }}
+                                                <i class="fas fa-crown me-1"></i>#<?php echo e($i); ?>
+
                                             </span>
                                         </div>
 
                                         <!-- Rental Count Badge -->
                                         <div class="rental-count position-absolute top-0 end-0 m-2">
                                             <span class="badge bg-orange">
-                                                <i class="fas fa-calendar-check me-1"></i>{{ rand(15, 45) }}
+                                                <i class="fas fa-calendar-check me-1"></i><?php echo e(rand(15, 45)); ?>
+
                                             </span>
                                         </div>
 
@@ -229,7 +235,7 @@
                                             <i class="fas fa-car fa-3x text-muted"></i>
                                         </div>
                                         
-                                        <h6 class="fw-bold text-white mb-2">Kendaraan Populer {{ $i }}</h6>
+                                        <h6 class="fw-bold text-white mb-2">Kendaraan Populer <?php echo e($i); ?></h6>
                                         
                                         <div class="vehicle-info mb-3">
                                             <div class="d-flex justify-content-between align-items-center mb-2">
@@ -239,12 +245,12 @@
 
                                             <div class="d-flex justify-content-between align-items-center mb-2">
                                                 <small class="text-muted">Total Disewa:</small>
-                                                <span class="badge bg-info">{{ rand(20, 50) }}x</span>
+                                                <span class="badge bg-info"><?php echo e(rand(20, 50)); ?>x</span>
                                             </div>
 
                                             <div class="d-flex justify-content-between align-items-center mb-2">
                                                 <small class="text-muted">Kapasitas:</small>
-                                                <small class="text-white">{{ rand(4, 7) }} seat</small>
+                                                <small class="text-white"><?php echo e(rand(4, 7)); ?> seat</small>
                                             </div>
                                         </div>
                                         
@@ -256,9 +262,9 @@
                                     </div>
                                 </div>
                             </div>
-                            @endfor
+                            <?php endfor; ?>
                         </div>
-                        @endif
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -328,7 +334,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const rentalStatusData = {
         labels: ['Selesai', 'Berlangsung', 'Pending'],
         datasets: [{
-            data: [{{ $rental_selesai ?? 15 }}, {{ $rental_aktif ?? 8 }}, {{ $pending_requests ?? 5 }}],
+            data: [<?php echo e($rental_selesai ?? 15); ?>, <?php echo e($rental_aktif ?? 8); ?>, <?php echo e($pending_requests ?? 5); ?>],
             backgroundColor: [
                 '#48bb78', // Green for completed
                 '#4299e1', // Blue for ongoing
@@ -344,12 +350,13 @@ document.addEventListener('DOMContentLoaded', function() {
         datasets: [{
             label: 'Pendapatan (Rp)',
             data: [
-                {{ $pendapatan_bulan_ini ? $pendapatan_bulan_ini * 0.7 : 3500000 }},
-                {{ $pendapatan_bulan_ini ? $pendapatan_bulan_ini * 0.8 : 4000000 }},
-                {{ $pendapatan_bulan_ini ? $pendapatan_bulan_ini * 0.9 : 4500000 }},
-                {{ $pendapatan_bulan_ini ? $pendapatan_bulan_ini * 1.1 : 5500000 }},
-                {{ $pendapatan_bulan_ini ? $pendapatan_bulan_ini * 1.2 : 6000000 }},
-                {{ $pendapatan_bulan_ini ?? 5000000 }}
+                <?php echo e($pendapatan_bulan_ini ? $pendapatan_bulan_ini * 0.7 : 3500000); ?>,
+                <?php echo e($pendapatan_bulan_ini ? $pendapatan_bulan_ini * 0.8 : 4000000); ?>,
+                <?php echo e($pendapatan_bulan_ini ? $pendapatan_bulan_ini * 0.9 : 4500000); ?>,
+                <?php echo e($pendapatan_bulan_ini ? $pendapatan_bulan_ini * 1.1 : 5500000); ?>,
+                <?php echo e($pendapatan_bulan_ini ? $pendapatan_bulan_ini * 1.2 : 6000000); ?>,
+                <?php echo e($pendapatan_bulan_ini ?? 5000000); ?>
+
             ],
             backgroundColor: 'rgba(255, 107, 53, 0.8)',
             borderColor: '#FF6B35',
@@ -438,4 +445,5 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.owner', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\laragon\www\SpeedRent\resources\views/owner/dashboard.blade.php ENDPATH**/ ?>

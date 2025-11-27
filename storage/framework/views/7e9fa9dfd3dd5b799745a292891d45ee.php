@@ -229,10 +229,10 @@
                 </span>
             </a>
             <div class="navbar-nav ms-auto">
-                <a href="{{ route('login') }}" class="btn btn-orange-outline btn-sm me-2">
+                <a href="<?php echo e(route('login')); ?>" class="btn btn-orange-outline btn-sm me-2">
                     <i class="fas fa-sign-in-alt me-1"></i>Login
                 </a>
-                <a href="{{ route('register') }}" class="btn btn-orange-primary btn-sm">
+                <a href="<?php echo e(route('register')); ?>" class="btn btn-orange-primary btn-sm">
                     <i class="fas fa-user-plus me-1"></i>Register
                 </a>
             </div>
@@ -251,7 +251,7 @@
                     Dari city car hingga Kendaraan keluarga, semua tersedia dengan kondisi terawat.
                 </p>
                 <div class="d-flex gap-3 flex-wrap">
-                    <a href="{{ route('register') }}" class="btn btn-orange-primary">
+                    <a href="<?php echo e(route('register')); ?>" class="btn btn-orange-primary">
                         <i class=""></i>Sewa Sekarang
                     </a>
                     <a href="#mobil" class="btn btn-orange-outline">
@@ -293,51 +293,52 @@
     <div id="mobil" class="container section-spacing">
         <h2 class="text-center mb-5 text-white fade-in-up">Kendaraan Tersedia</h2>
         
-        @if(isset($mobilTersedia) && $mobilTersedia->count() > 0)
+        <?php if(isset($mobilTersedia) && $mobilTersedia->count() > 0): ?>
             <div class="row">
-                @foreach($mobilTersedia as $mobil)
+                <?php $__currentLoopData = $mobilTersedia; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $mobil): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <div class="col-md-4 mb-4 fade-in-up">
                     <div class="car-card p-4 text-center">
                         <!-- Foto Mobil -->
-                        @if($mobil->foto && file_exists(public_path('storage/' . $mobil->foto)))
-                            <img src="{{ asset('storage/' . $mobil->foto) }}" alt="{{ $mobil->nama_kendaraan }}" class="car-image">
-                        @else
+                        <?php if($mobil->foto && file_exists(public_path('storage/' . $mobil->foto))): ?>
+                            <img src="<?php echo e(asset('storage/' . $mobil->foto)); ?>" alt="<?php echo e($mobil->nama_kendaraan); ?>" class="car-image">
+                        <?php else: ?>
                             <div class="car-placeholder">
                                 <i class="fas fa-car fa-3x text-orange"></i>
                             </div>
-                        @endif
+                        <?php endif; ?>
                         
-                        <h5 class="text-white">{{ $mobil->nama_kendaraan }}</h5>
-                        <p class="car-desc">{{ $mobil->deskripsi ?: 'Mobil premium berkualitas tinggi' }}</p>
+                        <h5 class="text-white"><?php echo e($mobil->nama_kendaraan); ?></h5>
+                        <p class="car-desc"><?php echo e($mobil->deskripsi ?: 'Mobil premium berkualitas tinggi'); ?></p>
                         
                         <div class="mb-3">
-                            <span class="badge bg-orange me-1">{{ $mobil->merek }}</span>
-                            <span class="badge bg-orange me-1">{{ $mobil->bahan_bakar }}</span>
-                            <span class="badge bg-orange">{{ $mobil->kapasitas }} Seat</span>
+                            <span class="badge bg-orange me-1"><?php echo e($mobil->merek); ?></span>
+                            <span class="badge bg-orange me-1"><?php echo e($mobil->bahan_bakar); ?></span>
+                            <span class="badge bg-orange"><?php echo e($mobil->kapasitas); ?> Seat</span>
                         </div>
                         
                         <div class="mb-3">
                             <small class="text-white-60">
-                                <i class="fas fa-palette me-1"></i>{{ $mobil->warna }} | 
-                                <i class="fas fa-tag me-1 ms-2"></i>{{ $mobil->plat_nomor }}
+                                <i class="fas fa-palette me-1"></i><?php echo e($mobil->warna); ?> | 
+                                <i class="fas fa-tag me-1 ms-2"></i><?php echo e($mobil->plat_nomor); ?>
+
                             </small>
                         </div>
                         
                         <!-- Harga -->
-                        @if(isset($mobil->harga) && $mobil->harga->harga_perhari)
-                            <h5 class="text-orange">Rp {{ number_format($mobil->harga->harga_perhari, 0, ',', '.') }}/hari</h5>
-                        @else
+                        <?php if(isset($mobil->harga) && $mobil->harga->harga_perhari): ?>
+                            <h5 class="text-orange">Rp <?php echo e(number_format($mobil->harga->harga_perhari, 0, ',', '.')); ?>/hari</h5>
+                        <?php else: ?>
                             <h5 class="text-orange">Hubungi untuk harga</h5>
-                        @endif
+                        <?php endif; ?>
                         
                         <div class="mt-3">
-                            <span class="badge bg-success">{{ $mobil->status }}</span>
+                            <span class="badge bg-success"><?php echo e($mobil->status); ?></span>
                         </div>
                     </div>
                 </div>
-                @endforeach
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </div>
-        @else
+        <?php else: ?>
             <!-- Demo cars jika tidak ada data -->
             <div class="row">
                 <!-- Car 1 -->
@@ -388,17 +389,17 @@
                     </div>
                 </div>
             </div>
-        @endif
+        <?php endif; ?>
         
         <!-- CTA Section -->
         <div class="text-center mt-5 fade-in-up">
             <h3 class="mb-3 text-white">Siap Memulai Perjalanan?</h3>
             <p class="cta-desc mb-4">Daftar sekarang dan nikmati pengalaman sewa Kendaraan terbaik dengan layanan premium</p>
             <div class="d-flex justify-content-center gap-3 flex-wrap">
-                <a href="{{ route('register') }}" class="btn btn-orange-primary btn-lg">
+                <a href="<?php echo e(route('register')); ?>" class="btn btn-orange-primary btn-lg">
                     <i class="fas fa-user-plus me-2"></i>Daftar Sekarang
                 </a>
-                <a href="{{ route('login') }}" class="btn btn-orange-outline btn-lg">
+                <a href="<?php echo e(route('login')); ?>" class="btn btn-orange-outline btn-lg">
                     <i class="fas fa-sign-in-alt me-2"></i>Login
                 </a>
             </div>
@@ -461,4 +462,4 @@
         });
     </script>
 </body>
-</html>
+</html><?php /**PATH C:\laragon\www\SpeedRent\resources\views/welcome.blade.php ENDPATH**/ ?>

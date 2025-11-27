@@ -1,8 +1,8 @@
-@extends('layouts.owner')
 
-@section('title', 'Manajemen Kategori - SpeedRent')
 
-@section('content')
+<?php $__env->startSection('title', 'Manajemen Kategori - SpeedRent'); ?>
+
+<?php $__env->startSection('content'); ?>
 <div class="dashboard-container">
     <div class="container-fluid">
         <!-- Header -->
@@ -18,23 +18,24 @@
         </div>
 
         <!-- Alert Messages -->
-        @if(session('success'))
+        <?php if(session('success')): ?>
             <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
                 <i class="fas fa-check-circle me-2"></i>
-                {{ session('success') }}
+                <?php echo e(session('success')); ?>
+
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
-        @endif
+        <?php endif; ?>
 
-        @if($errors->any())
+        <?php if($errors->any()): ?>
             <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
                 <i class="fas fa-exclamation-triangle me-2"></i>
-                @foreach($errors->all() as $error)
-                    <div class="small">{{ $error }}</div>
-                @endforeach
+                <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <div class="small"><?php echo e($error); ?></div>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
-        @endif
+        <?php endif; ?>
 
         <div class="row">
             <!-- Daftar Kategori -->
@@ -46,7 +47,7 @@
                             Daftar Kategori Kendaraan
                         </h5>
 
-                        @if($kategoris->count() > 0)
+                        <?php if($kategoris->count() > 0): ?>
                             <div class="table-responsive">
                                 <table class="table table-dark table-hover">
                                     <thead>
@@ -59,31 +60,34 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($kategoris as $index => $kategori)
+                                        <?php $__currentLoopData = $kategoris; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $kategori): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                             <tr>
-                                                <td class="text-muted">{{ $index + 1 }}</td>
+                                                <td class="text-muted"><?php echo e($index + 1); ?></td>
                                                 <td class="text-white fw-semibold">
-                                                    <span class="badge {{ $kategori->nama_kategori == 'Mobil' ? 'bg-primary' : 'bg-success' }}">
-                                                        {{ $kategori->nama_kategori }}
+                                                    <span class="badge <?php echo e($kategori->nama_kategori == 'Mobil' ? 'bg-primary' : 'bg-success'); ?>">
+                                                        <?php echo e($kategori->nama_kategori); ?>
+
                                                     </span>
                                                 </td>
                                                 <td>
                                                     <span class="badge bg-orange">
                                                         <i class="fas fa-tags me-1"></i>
-                                                        {{ $kategori->jenis }}
+                                                        <?php echo e($kategori->jenis); ?>
+
                                                     </span>
                                                 </td>
                                                 <td>
                                                     <span class="badge bg-info">
                                                         <i class="fas fa-car-side me-1"></i>
-                                                        {{ $kategori->kendaraans_count }} Kendaraan
+                                                        <?php echo e($kategori->kendaraans_count); ?> Kendaraan
                                                     </span>
                                                 </td>
                                                 <td class="text-muted">
-                                                    {{ $kategori->created_at->format('d/m/Y') }}
+                                                    <?php echo e($kategori->created_at->format('d/m/Y')); ?>
+
                                                 </td>
                                             </tr>
-                                        @endforeach
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -93,7 +97,7 @@
                                 <div class="col-md-4">
                                     <div class="card orange-card stat-card">
                                         <div class="card-body text-center p-3">
-                                            <div class="h4 fw-bold text-white mb-1">{{ $kategoris->count() }}</div>
+                                            <div class="h4 fw-bold text-white mb-1"><?php echo e($kategoris->count()); ?></div>
                                             <div class="small text-muted">Total Kategori</div>
                                         </div>
                                     </div>
@@ -102,7 +106,8 @@
                                     <div class="card orange-card stat-card">
                                         <div class="card-body text-center p-3">
                                             <div class="h4 fw-bold text-white mb-1">
-                                                {{ $kategoris->where('nama_kategori', 'Mobil')->count() }}
+                                                <?php echo e($kategoris->where('nama_kategori', 'Mobil')->count()); ?>
+
                                             </div>
                                             <div class="small text-muted">Kategori Mobil</div>
                                         </div>
@@ -112,20 +117,21 @@
                                     <div class="card orange-card stat-card">
                                         <div class="card-body text-center p-3">
                                             <div class="h4 fw-bold text-white mb-1">
-                                                {{ $kategoris->sum('kendaraans_count') }}
+                                                <?php echo e($kategoris->sum('kendaraans_count')); ?>
+
                                             </div>
                                             <div class="small text-muted">Total Kendaraan</div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        @else
+                        <?php else: ?>
                             <div class="text-center py-5">
                                 <i class="fas fa-tags fa-3x text-muted mb-3"></i>
                                 <h5 class="text-muted">Belum ada kategori</h5>
                                 <p class="text-muted">Tidak ada data kategori yang tersedia</p>
                             </div>
-                        @endif
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -165,4 +171,5 @@
         });
     });
 </script>
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.owner', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\laragon\www\SpeedRent\resources\views/owner/kategori.blade.php ENDPATH**/ ?>

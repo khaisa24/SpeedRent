@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SpeedRent - @yield('title')</title>
+    <title>SpeedRent - <?php echo $__env->yieldContent('title'); ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -18,215 +18,6 @@
             --sidebar-collapsed: 80px;
         }
 
-        /* TAMBAHKAN INI DI BAGIAN UTAMA CSS */
-
-        .top-navbar {
-            position: sticky;
-            top: 0;
-            z-index: 999;
-        }
-
-        /* Grid Layout untuk Kendaraan - 4 CARD PER BARIS */
-.kendaraan-grid {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(280px, 1fr));
-    gap: 1.5rem;
-}
-
-.kendaraan-item {
-    display: flex;
-}
-
-/* Responsive Design */
-@media (max-width: 1400px) {
-    .kendaraan-grid {
-        grid-template-columns: repeat(3, minmax(280px, 1fr));
-    }
-}
-
-@media (max-width: 1200px) {
-    .kendaraan-grid {
-        grid-template-columns: repeat(2, minmax(280px, 1fr));
-    }
-}
-
-@media (max-width: 768px) {
-    .kendaraan-grid {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-    }
-}
-
-/* Card Styles - DIPERBAIKI untuk foto tidak terpotong */
-.kendaraan-card {
-    transition: all 0.3s ease;
-    border: none;
-    border-radius: 15px;
-    overflow: hidden;
-    background: rgba(26, 26, 26, 0.9);
-    border: 1px solid rgba(255, 107, 53, 0.3);
-    height: 100%;
-    min-height: 420px;
-}
-
-.kendaraan-image {
-    height: 200px; /* Tinggi optimal untuk 4 kolom */
-    background: linear-gradient(135deg, var(--dark) 0%, var(--black) 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
-}
-
-/* FOTO TIDAK TERPOTONG - OBJECT-FIT COVER */
-.kendaraan-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Ini yang bikin foto fokus tidak terpotong */
-    transition: transform 0.3s ease;
-}
-
-.kendaraan-card:hover .kendaraan-image img {
-    transform: scale(1.05);
-}
-
-.kendaraan-status {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    z-index: 2;
-}
-
-.kendaraan-category {
-    position: absolute;
-    top: 12px;
-    left: 12px;
-    z-index: 2;
-}
-
-.kendaraan-info {
-    padding: 1.2rem;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-.kendaraan-title {
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: var(--white);
-    margin-bottom: 0.5rem;
-    line-height: 1.3;
-}
-
-.kendaraan-details {
-    margin-bottom: 1rem;
-    flex: 1;
-}
-
-.kendaraan-brand {
-    color: var(--orange);
-    font-weight: 600;
-    margin-bottom: 0.4rem;
-    font-size: 0.95rem;
-}
-
-.kendaraan-type {
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 0.85rem;
-    margin-bottom: 0.8rem;
-    background: rgba(255, 107, 53, 0.1);
-    padding: 0.25rem 0.6rem;
-    border-radius: 6px;
-    display: inline-block;
-}
-
-.kendaraan-specs {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-}
-
-.spec-item {
-    font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.8);
-    background: rgba(255, 255, 255, 0.1);
-    padding: 0.35rem 0.5rem;
-    border-radius: 5px;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.3rem;
-}
-
-.kendaraan-description {
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 0.85rem;
-    line-height: 1.4;
-    margin-bottom: 1.2rem;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    flex: 1;
-}
-
-.kendaraan-actions {
-    display: flex;
-    gap: 0.5rem;
-    justify-content: space-between;
-    margin-top: auto;
-}
-
-.kendaraan-actions .btn {
-    padding: 0.4rem 0.8rem;
-    font-size: 0.8rem;
-    white-space: nowrap;
-}
-
-.empty-state {
-    text-align: center;
-    padding: 4rem 2rem;
-    color: rgba(255, 255, 255, 0.6);
-    background: rgba(26, 26, 26, 0.5);
-    border-radius: 15px;
-    border: 2px dashed rgba(255, 107, 53, 0.3);
-    grid-column: 1 / -1; /* Span semua kolom */
-}
-
-.empty-state i {
-    font-size: 4rem;
-    margin-bottom: 1.5rem;
-    color: rgba(255, 107, 53, 0.5);
-}
-
-.empty-state h4 {
-    color: var(--white);
-    margin-bottom: 1rem;
-}
-
-.section-title {
-    color: var(--white);
-    font-weight: 700;
-    margin-bottom: 2rem;
-    padding-bottom: 1rem;
-    border-bottom: 2px solid rgba(255, 107, 53, 0.3);
-    font-size: 1.5rem;
-}
-
-        .main-content {
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        .content-wrapper {
-            height: 100%;
-            overflow-y: auto;
-        }
-        
         /* Global Background */
         .orange-bg {
             background: linear-gradient(135deg, var(--black) 0%, var(--dark) 100%);
@@ -359,17 +150,12 @@
             flex-shrink: 0;
         }
         
-        .nav-link .badge {
-            margin-left: auto;
-            font-size: 0.6rem;
-            flex-shrink: 0;
-        }
-        
         /* Main Content */
         .main-content {
             flex: 1;
             margin-left: var(--sidebar-width);
             transition: all 0.3s ease;
+            min-height: 100vh;
         }
         
         .main-content.expanded {
@@ -381,22 +167,18 @@
             background: rgba(10, 10, 10, 0.95);
             border-bottom: 1px solid rgba(255, 107, 53, 0.2);
             padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 999;
         }
         
-        /* Content Wrapper - DIPERBAIKI */
+        /* Content Wrapper */
         .content-wrapper {
             padding: 2rem 0;
-        }
-        
-        /* Auth Pages */
-        .auth-container {
             min-height: calc(100vh - 80px);
-            display: flex;
-            align-items: center;
-            padding: 2rem 0;
         }
         
-        /* Card Styles - DIPERBAIKI */
+        /* Card Styles */
         .orange-card {
             border: none;
             border-radius: 12px;
@@ -455,35 +237,6 @@
             transform: translateY(-2px);
         }
         
-        /* Form Styles - DIPERBAIKI */
-        .form-control {
-            border-radius: 8px;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            padding: 12px 15px;
-            transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--white);
-            margin-bottom: 1.25rem;
-        }
-        
-        .form-control:focus {
-            border-color: var(--orange);
-            box-shadow: 0 0 0 0.2rem rgba(255, 107, 53, 0.1);
-            background: rgba(255, 255, 255, 0.08);
-            color: var(--white);
-        }
-        
-        .form-control::placeholder {
-            color: rgba(255, 255, 255, 0.5);
-        }
-        
-        .form-label {
-            color: var(--white);
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-            display: block;
-        }
-        
         /* Text Styles */
         .logo-text {
             color: var(--white);
@@ -498,11 +251,11 @@
             color: var(--orange) !important;
         }
         
-        /* Dashboard Specific - DIPERBAIKI */
+        /* Dashboard Specific */
         .dashboard-container {
-            background: linear-gradient(135deg, var(--black) 0%, var(--dark) 100%);
-            min-height: 100vh;
-            padding: 2rem 0;
+            background: transparent;
+            min-height: auto;
+            padding: 0;
         }
         
         .stat-card {
@@ -520,7 +273,7 @@
             padding: 2rem 1.5rem;
         }
         
-        /* Table Styles - DIPERBAIKI */
+        /* Table Styles */
         .table-dark {
             background: transparent;
             border-color: rgba(255, 255, 255, 0.1);
@@ -553,21 +306,6 @@
         .bg-warning { background-color: #ed8936 !important; }
         .bg-danger { background-color: #f56565 !important; }
         .bg-info { background-color: #38b2ac !important; }
-        
-        /* Labels & Links */
-        label {
-            color: var(--white);
-            font-weight: 600;
-        }
-        
-        a {
-            color: var(--orange);
-            text-decoration: none;
-        }
-        
-        a:hover {
-            color: var(--orange-light);
-        }
         
         .text-muted {
             color: rgba(255, 255, 255, 0.7) !important;
@@ -602,63 +340,13 @@
             flex: 1;
         }
         
-        /* Alert Styles - DIPERBAIKI */
-        .alert {
-            border: none;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            padding: 1rem 1.25rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .alert-success {
-            background-color: rgba(40, 167, 69, 0.2);
-            color: #75b798;
-            border-left: 4px solid #28a745;
-        }
-        
-        .alert-danger {
-            background-color: rgba(220, 53, 69, 0.2);
-            color: #ea868f;
-            border-left: 4px solid #dc3545;
-        }
-        
-        .alert .btn-close {
-            filter: invert(1);
-            padding: 0.75rem;
-        }
-        
-        /* Button Groups - DIPERBAIKI */
-        .btn-group-sm > .btn {
-            padding: 0.5rem 0.75rem;
-            font-size: 0.875rem;
-            margin: 0 2px;
-        }
-        
-        /* Tooltip for collapsed sidebar */
-        .nav-link[data-bs-toggle="tooltip"] {
-            position: relative;
-        }
-        
-        /* Additional Spacing Utilities */
+        /* Additional Spacing */
         .mb-4 {
             margin-bottom: 2rem !important;
         }
         
         .mb-3 {
             margin-bottom: 1.5rem !important;
-        }
-        
-        .mt-4 {
-            margin-top: 2rem !important;
-        }
-        
-        .pt-4 {
-            padding-top: 2rem !important;
-        }
-        
-        .pb-4 {
-            padding-bottom: 2rem !important;
         }
         
         /* Responsive */
@@ -691,22 +379,11 @@
             .orange-card .card-body {
                 padding: 1.5rem;
             }
-            
-            .dashboard-container {
-                padding: 1rem 0;
-            }
-
-            /* KENDARAAN CARD STYLES - Tambahkan di layouts.app */
-
+        }
         
         @media (max-width: 576px) {
             .orange-card .card-body {
                 padding: 1rem;
-            }
-            
-            .form-control {
-                padding: 10px 12px;
-                margin-bottom: 1rem;
             }
             
             .btn-orange-primary,
@@ -714,9 +391,6 @@
                 padding: 10px 15px;
                 font-size: 0.9rem;
             }
-
-            
-            
         }
     </style>
 </head>
@@ -739,78 +413,54 @@
             <nav class="sidebar-menu">
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a href="{{ route('admin.dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                        <a href="<?php echo e(route('owner.dashboard')); ?>" class="nav-link <?php echo e(request()->routeIs('owner.dashboard') ? 'active' : ''); ?>">
                             <i class="fas fa-tachometer-alt"></i>
                             <span>Dashboard</span>
                         </a>
                     </li>
                     
                     <li class="nav-item">
-                        <a href="{{ route('admin.kategori') }}" class="nav-link {{ request()->routeIs('kategori.*') ? 'active' : '' }}">
+                        <a href="<?php echo e(route('owner.kategori')); ?>" class="nav-link <?php echo e(request()->routeIs('owner.kategori*') ? 'active' : ''); ?>">
                             <i class="fas fa-tags"></i>
                             <span>Kategori</span>
                         </a>
                     </li>
                     
                     <li class="nav-item">
-                        <a href="{{ route('admin.kendaraan') }}" class="nav-link {{ request()->routeIs('admin.kendaraan.*') ? 'active' : '' }}">
+                        <a href="<?php echo e(route('owner.kendaraan')); ?>" class="nav-link <?php echo e(request()->routeIs('owner.kendaraan*') ? 'active' : ''); ?>">
                             <i class="fas fa-car-side"></i>
                             <span>Kendaraan</span>
                         </a>
-                    </li>
+                    </li> 
+
                     
-                    <li class="nav-item">
-                        <a href="{{ route('admin.harga') }}" class="nav-link {{ request()->routeIs('admin.harga*') ? 'active' : '' }}">
-                            <i class="fas fa-tag"></i>
-                            <span>Harga</span>
-                        </a>
-                    </li>
+
                     
+
                     <li class="nav-item">
-                        <a href="{{ route('admin.rental') }}" class="nav-link {{ request()->routeIs('admin.rental*') ? 'active' : '' }}">
-                            <i class="fas fa-clipboard-list"></i>
-                            <span>Manajemen Rental</span>
-                            <span class="badge bg-primary">{{ $rental_aktif ?? 0 }}</span>
-                        </a>
-                    </li>
-                    
-                    <li class="nav-item">
-                        <a href="{{ route('admin.pembayaran') }}" class="nav-link {{ request()->routeIs('admin.pembayaran*') ? 'active' : '' }}">
-                            <i class="fas fa-credit-card"></i>
-                            <span>Pembayaran</span>
-                        </a>
-                    </li>
-                    
-                    <li class="nav-item">
-                        <a href="{{ route('admin.laporan') }}" class="nav-link {{ request()->routeIs('admin.laporan*') ? 'active' : '' }}">
+                        <a href="<?php echo e(route('owner.laporan')); ?>" class="nav-link <?php echo e(request()->routeIs('owner.laporan*') ? 'active' : ''); ?>">
                             <i class="fas fa-chart-bar"></i>
                             <span>Laporan</span>
-                        </a>
-                    </li>
-                    
-                    <li class="nav-item">
-                        <a href="{{ route('admin.users') }}" class="nav-link {{ request()->routeIs('admin.users*') ? 'active' : '' }}">
-                            <i class="fas fa-users"></i>
-                            <span>Manajemen User</span>
                         </a>
                     </li>
                 </ul>
             </nav>
 
             <!-- User Info -->
-            @auth
+            <?php if(auth()->guard()->check()): ?>
             <div class="user-info">
                 <div class="d-flex align-items-center">
                     <div class="user-avatar">
-                        {{ strtoupper(substr(Auth::user()->nama_user, 0, 1)) }}
+                        <?php echo e(strtoupper(substr(Auth::user()->nama_user, 0, 1))); ?>
+
                     </div>
                     <div class="user-details">
-                        <div class="small fw-bold text-white">{{ Auth::user()->nama_user }}</div>
-                        <div class="small text-muted">{{ Auth::user()->role }}</div>
+                        <div class="small fw-bold text-white"><?php echo e(Auth::user()->nama_user); ?></div>
+                        <div class="small text-muted text-capitalize"><?php echo e(Auth::user()->role); ?></div>
                     </div>
                 </div>
             </div>
-            @endauth
+            <?php endif; ?>
         </aside>
 
         <!-- Main Content -->
@@ -825,28 +475,25 @@
                         </button>
                         
                         <!-- Page Title -->
-                        <h5 class="mb-0 text-white">@yield('title', 'Dashboard')</h5>
+                        <h5 class="mb-0 text-white"><?php echo $__env->yieldContent('title', 'Dashboard Owner'); ?></h5>
                         
                         <!-- User Actions -->
                         <div class="navbar-nav ms-auto">
-                            @auth
-                                {{-- <span class="navbar-text me-3 d-none d-md-block">
-                                    <i class="fas fa-user me-1"></i> {{ Auth::user()->nama_user }}
-                                </span> --}}
-                                <form action="{{ route('logout') }}" method="POST" class="d-inline">
-                                    @csrf
+                            <?php if(auth()->guard()->check()): ?>
+                                <form action="<?php echo e(route('logout')); ?>" method="POST" class="d-inline">
+                                    <?php echo csrf_field(); ?>
                                     <button type="submit" class="btn btn-orange-outline btn-sm">
                                         <i class="fas fa-sign-out-alt me-1"></i>Logout
                                     </button>
                                 </form>
-                            @else
-                                <a href="{{ route('login') }}" class="btn btn-orange-outline btn-sm me-2">
+                            <?php else: ?>
+                                <a href="<?php echo e(route('login')); ?>" class="btn btn-orange-outline btn-sm me-2">
                                     <i class="fas fa-sign-in-alt me-1"></i>Login
                                 </a>
-                                <a href="{{ route('register') }}" class="btn btn-orange-primary btn-sm">
+                                <a href="<?php echo e(route('register')); ?>" class="btn btn-orange-primary btn-sm">
                                     <i class="fas fa-user-plus me-1"></i>Register
                                 </a>
-                            @endauth
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
@@ -855,7 +502,7 @@
             <!-- Content Area -->
             <div class="content-wrapper">
                 <div class="container-fluid">
-                    @yield('content')
+                    <?php echo $__env->yieldContent('content'); ?>
                 </div>
             </div>
         </div>
@@ -912,13 +559,7 @@
                     }
                 }
             });
-            
-            // Initialize tooltips for collapsed sidebar
-            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl);
-            });
         });
     </script>
 </body>
-</html>
+</html><?php /**PATH C:\laragon\www\SpeedRent\resources\views/layouts/owner.blade.php ENDPATH**/ ?>

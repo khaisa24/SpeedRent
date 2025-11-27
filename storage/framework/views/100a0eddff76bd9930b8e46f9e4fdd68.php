@@ -1,8 +1,8 @@
-@extends('layouts.owner')
 
-@section('title', 'Manajemen Kendaraan')
 
-@section('content')
+<?php $__env->startSection('title', 'Manajemen Kendaraan'); ?>
+
+<?php $__env->startSection('content'); ?>
 <div class="dashboard-container">
     <div class="container-fluid">
         <!-- Header -->
@@ -16,7 +16,7 @@
                     <div class="d-flex align-items-center gap-3">
                         <span class="badge bg-orange px-3 py-2">
                             <i class="fas fa-car-side me-1"></i>
-                            Total: {{ $kendaraans->count() }} Kendaraan
+                            Total: <?php echo e($kendaraans->count()); ?> Kendaraan
                         </span>
                     </div>
                 </div>
@@ -24,28 +24,30 @@
         </div>
 
         <!-- Alert Messages -->
-        @if(session('success'))
+        <?php if(session('success')): ?>
             <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
                 <i class="fas fa-check-circle me-2"></i>
-                {{ session('success') }}
+                <?php echo e(session('success')); ?>
+
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
-        @endif
+        <?php endif; ?>
 
-        @if(session('error'))
+        <?php if(session('error')): ?>
             <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
                 <i class="fas fa-exclamation-circle me-2"></i>
-                {{ session('error') }}
+                <?php echo e(session('error')); ?>
+
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
-        @endif
+        <?php endif; ?>
 
         <!-- Statistics Cards -->
         <div class="row mb-4">
             <div class="col-xl-3 col-md-6 mb-4">
                 <div class="card orange-card stat-card">
                     <div class="card-body text-center p-3">
-                        <div class="stat-number text-success">{{ $kendaraans->where('status', 'Tersedia')->count() }}</div>
+                        <div class="stat-number text-success"><?php echo e($kendaraans->where('status', 'Tersedia')->count()); ?></div>
                         <div class="stat-label">
                             <i class="fas fa-check-circle me-1"></i>Tersedia
                         </div>
@@ -55,7 +57,7 @@
             <div class="col-xl-3 col-md-6 mb-4">
                 <div class="card orange-card stat-card">
                     <div class="card-body text-center p-3">
-                        <div class="stat-number text-warning">{{ $kendaraans->where('status', 'Disewa')->count() }}</div>
+                        <div class="stat-number text-warning"><?php echo e($kendaraans->where('status', 'Disewa')->count()); ?></div>
                         <div class="stat-label">
                             <i class="fas fa-clock me-1"></i>Disewa
                         </div>
@@ -65,7 +67,7 @@
             <div class="col-xl-3 col-md-6 mb-4">
                 <div class="card orange-card stat-card">
                     <div class="card-body text-center p-3">
-                        <div class="stat-number text-danger">{{ $kendaraans->where('status', 'Maintenance')->count() }}</div>
+                        <div class="stat-number text-danger"><?php echo e($kendaraans->where('status', 'Maintenance')->count()); ?></div>
                         <div class="stat-label">
                             <i class="fas fa-tools me-1"></i>Maintenance
                         </div>
@@ -75,7 +77,7 @@
             <div class="col-xl-3 col-md-6 mb-4">
                 <div class="card orange-card stat-card">
                     <div class="card-body text-center p-3">
-                        <div class="stat-number text-info">{{ $kendaraans->count() }}</div>
+                        <div class="stat-number text-info"><?php echo e($kendaraans->count()); ?></div>
                         <div class="stat-label">
                             <i class="fas fa-car-side me-1"></i>Total
                         </div>
@@ -94,75 +96,78 @@
                             Daftar Semua Kendaraan
                         </h5>
                         
-                        @if($kendaraans->count() > 0)
+                        <?php if($kendaraans->count() > 0): ?>
                             <div class="row g-4">
-                                @foreach($kendaraans as $kendaraan)
+                                <?php $__currentLoopData = $kendaraans; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $kendaraan): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 mb-4">
                                     <div class="kendaraan-card h-100">
                                         <div class="kendaraan-image">
-                                            <img src="{{ $kendaraan->foto ? asset('storage/' . $kendaraan->foto) : 'https://via.placeholder.com/300x200/1a1a1a/FF6B35?text=No+Image' }}" 
-                                                 alt="{{ $kendaraan->nama_kendaraan }}"
+                                            <img src="<?php echo e($kendaraan->foto ? asset('storage/' . $kendaraan->foto) : 'https://via.placeholder.com/300x200/1a1a1a/FF6B35?text=No+Image'); ?>" 
+                                                 alt="<?php echo e($kendaraan->nama_kendaraan); ?>"
                                                  class="kendaraan-img">
                                             <div class="kendaraan-overlay">
                                                 <div class="kendaraan-status">
-                                                    @if($kendaraan->status == 'Tersedia')
+                                                    <?php if($kendaraan->status == 'Tersedia'): ?>
                                                         <span class="badge bg-success">
                                                             <i class="fas fa-check me-1"></i>Tersedia
                                                         </span>
-                                                    @elseif($kendaraan->status == 'Disewa')
+                                                    <?php elseif($kendaraan->status == 'Disewa'): ?>
                                                         <span class="badge bg-warning">
                                                             <i class="fas fa-clock me-1"></i>Disewa
                                                         </span>
-                                                    @else
+                                                    <?php else: ?>
                                                         <span class="badge bg-danger">
                                                             <i class="fas fa-tools me-1"></i>Maintenance
                                                         </span>
-                                                    @endif
+                                                    <?php endif; ?>
                                                 </div>
                                                 <div class="kendaraan-category">
                                                     <span class="badge bg-dark">
-                                                        <i class="fas fa-tag me-1"></i>{{ $kendaraan->kategori->nama_kategori ?? 'N/A' }}
+                                                        <i class="fas fa-tag me-1"></i><?php echo e($kendaraan->kategori->nama_kategori ?? 'N/A'); ?>
+
                                                     </span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="kendaraan-info">
-                                            <h6 class="kendaraan-title">{{ $kendaraan->nama_kendaraan }}</h6>
+                                            <h6 class="kendaraan-title"><?php echo e($kendaraan->nama_kendaraan); ?></h6>
                                             <div class="kendaraan-meta">
                                                 <div class="kendaraan-brand">
                                                     <i class="fas fa-tag me-1 text-muted"></i>
-                                                    {{ $kendaraan->merek }}
+                                                    <?php echo e($kendaraan->merek); ?>
+
                                                 </div>
                                                 <div class="kendaraan-plat">
                                                     <i class="fas fa-id-card me-1 text-muted"></i>
-                                                    {{ $kendaraan->plat_nomor }}
+                                                    <?php echo e($kendaraan->plat_nomor); ?>
+
                                                 </div>
                                             </div>
                                             <div class="kendaraan-price">
                                                 <span class="price-text">
-                                                    Rp {{ number_format($kendaraan->harga->harga_per_hari ?? 0, 0, ',', '.') }}/hari
+                                                    Rp <?php echo e(number_format($kendaraan->harga->harga_per_hari ?? 0, 0, ',', '.')); ?>/hari
                                                 </span>
                                             </div>
                                             <div class="kendaraan-details">
                                                 <div class="detail-item">
                                                     <i class="fas fa-users text-muted"></i>
-                                                    <span>{{ $kendaraan->kapasitas }} Seat</span>
+                                                    <span><?php echo e($kendaraan->kapasitas); ?> Seat</span>
                                                 </div>
                                                 <div class="detail-item">
                                                     <i class="fas fa-gas-pump text-muted"></i>
-                                                    <span>{{ $kendaraan->bahan_bakar }}</span>
+                                                    <span><?php echo e($kendaraan->bahan_bakar); ?></span>
                                                 </div>
                                                 <div class="detail-item">
                                                     <i class="fas fa-palette text-muted"></i>
-                                                    <span>{{ $kendaraan->warna }}</span>
+                                                    <span><?php echo e($kendaraan->warna); ?></span>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                @endforeach
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </div>
-                        @else
+                        <?php else: ?>
                             <div class="empty-state text-center py-5">
                                 <div class="empty-icon mb-3">
                                     <i class="fas fa-car fa-4x text-muted"></i>
@@ -170,7 +175,7 @@
                                 <h4 class="text-muted mb-2">Belum ada kendaraan</h4>
                                 <p class="text-muted">Tidak ada data kendaraan yang tersedia saat ini</p>
                             </div>
-                        @endif
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -428,4 +433,5 @@
         });
     });
 </script>
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.owner', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\laragon\www\SpeedRent\resources\views/owner/kendaraan.blade.php ENDPATH**/ ?>

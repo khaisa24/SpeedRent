@@ -1,8 +1,8 @@
-@extends('layouts.app')
 
-@section('title', 'Manajemen Kategori - SpeedRent')
 
-@section('content')
+<?php $__env->startSection('title', 'Manajemen Kategori - SpeedRent'); ?>
+
+<?php $__env->startSection('content'); ?>
 <div class="dashboard-container">
     <div class="container-fluid">
         <!-- Header -->
@@ -18,23 +18,24 @@
         </div>
 
         <!-- Alert Messages -->
-        @if(session('success'))
+        <?php if(session('success')): ?>
             <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
                 <i class="fas fa-check-circle me-2"></i>
-                {{ session('success') }}
+                <?php echo e(session('success')); ?>
+
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
-        @endif
+        <?php endif; ?>
 
-        @if($errors->any())
+        <?php if($errors->any()): ?>
             <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
                 <i class="fas fa-exclamation-triangle me-2"></i>
-                @foreach($errors->all() as $error)
-                    <div class="small">{{ $error }}</div>
-                @endforeach
+                <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <div class="small"><?php echo e($error); ?></div>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
-        @endif
+        <?php endif; ?>
 
         <div class="row">
             <!-- Form Input Kategori -->
@@ -43,48 +44,64 @@
                     <div class="card-body">
                         <h5 class="card-title text-white mb-4">
                             <i class="fas fa-plus-circle me-2 text-orange"></i>
-                            {{ isset($editKategori) ? 'Edit Kategori' : 'Tambah Kategori Baru' }}
+                            <?php echo e(isset($editKategori) ? 'Edit Kategori' : 'Tambah Kategori Baru'); ?>
+
                         </h5>
                         
-                        <form action="{{ isset($editKategori) ? route('admin.kategori.update', $editKategori->id_kategori) : route('admin.kategori.store') }}" method="POST">
-                            @csrf
-                            @if(isset($editKategori))
-                                @method('PUT')
-                            @endif
+                        <form action="<?php echo e(isset($editKategori) ? route('admin.kategori.update', $editKategori->id_kategori) : route('admin.kategori.store')); ?>" method="POST">
+                            <?php echo csrf_field(); ?>
+                            <?php if(isset($editKategori)): ?>
+                                <?php echo method_field('PUT'); ?>
+                            <?php endif; ?>
 
                             <div class="mb-3">
                                 <label for="nama_kategori" class="form-label">Kategori Kendaraan</label>
                                 <select class="form-control dark-select" id="nama_kategori" name="nama_kategori" required>
                                     <option value="">Pilih Kategori</option>
-                                    <option value="Mobil" {{ old('nama_kategori', $editKategori->nama_kategori ?? '') == 'Mobil' ? 'selected' : '' }}>Mobil</option>
-                                    <option value="Motor" {{ old('nama_kategori', $editKategori->nama_kategori ?? '') == 'Motor' ? 'selected' : '' }}>Motor</option>
+                                    <option value="Mobil" <?php echo e(old('nama_kategori', $editKategori->nama_kategori ?? '') == 'Mobil' ? 'selected' : ''); ?>>Mobil</option>
+                                    <option value="Motor" <?php echo e(old('nama_kategori', $editKategori->nama_kategori ?? '') == 'Motor' ? 'selected' : ''); ?>>Motor</option>
                                 </select>
-                                @error('nama_kategori')
-                                    <div class="text-danger small mt-1">{{ $message }}</div>
-                                @enderror
+                                <?php $__errorArgs = ['nama_kategori'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                    <div class="text-danger small mt-1"><?php echo e($message); ?></div>
+                                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                             </div>
 
                             <div class="mb-4">
                                 <label for="jenis" class="form-label">Nama Jenis</label>
                                 <input type="text" class="form-control" id="jenis" name="jenis" 
-                                       value="{{ old('jenis', $editKategori->jenis ?? '') }}" 
+                                       value="<?php echo e(old('jenis', $editKategori->jenis ?? '')); ?>" 
                                        required placeholder="Contoh: SUV, Sedan, Sport, Matic">
-                                @error('jenis')
-                                    <div class="text-danger small mt-1">{{ $message }}</div>
-                                @enderror
+                                <?php $__errorArgs = ['jenis'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                    <div class="text-danger small mt-1"><?php echo e($message); ?></div>
+                                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                             </div>
 
                             <div class="d-grid gap-2">
                                 <button type="submit" class="btn btn-orange-primary">
                                     <i class="fas fa-save me-2"></i>
-                                    {{ isset($editKategori) ? 'Update Kategori' : 'Simpan Kategori' }}
+                                    <?php echo e(isset($editKategori) ? 'Update Kategori' : 'Simpan Kategori'); ?>
+
                                 </button>
                                 
-                                @if(isset($editKategori))
-                                    <a href="{{ route('admin.kategori') }}" class="btn btn-orange-outline">
+                                <?php if(isset($editKategori)): ?>
+                                    <a href="<?php echo e(route('admin.kategori')); ?>" class="btn btn-orange-outline">
                                         <i class="fas fa-times me-2"></i>Batal Edit
                                     </a>
-                                @endif
+                                <?php endif; ?>
                             </div>
                         </form>
                     </div>
@@ -100,7 +117,7 @@
                             Daftar Kategori
                         </h5>
 
-                        @if($kategoris->count() > 0)
+                        <?php if($kategoris->count() > 0): ?>
                             <div class="table-responsive">
                                 <table class="table table-dark table-hover">
                                     <thead>
@@ -113,32 +130,34 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($kategoris as $index => $kategori)
+                                        <?php $__currentLoopData = $kategoris; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $kategori): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                             <tr>
-                                                <td class="text-muted">{{ $index + 1 }}</td>
+                                                <td class="text-muted"><?php echo e($index + 1); ?></td>
                                                 <td>
-                                                    <span class="badge {{ $kategori->nama_kategori == 'Mobil' ? 'bg-primary' : 'bg-success' }}">
-                                                        {{ $kategori->nama_kategori }}
+                                                    <span class="badge <?php echo e($kategori->nama_kategori == 'Mobil' ? 'bg-primary' : 'bg-success'); ?>">
+                                                        <?php echo e($kategori->nama_kategori); ?>
+
                                                     </span>
                                                 </td>
-                                                <td class="text-white">{{ $kategori->jenis }}</td>
+                                                <td class="text-white"><?php echo e($kategori->jenis); ?></td>
                                                 <td class="text-muted">
-                                                    {{ $kategori->created_at->format('d/m/Y') }}
+                                                    <?php echo e($kategori->created_at->format('d/m/Y')); ?>
+
                                                 </td>
                                                 <td class="text-center">
                                                     <div class="btn-group btn-group-sm" role="group">
-                                                        <a href="{{ route('admin.kategori', ['edit' => $kategori->id_kategori]) }}" 
+                                                        <a href="<?php echo e(route('admin.kategori', ['edit' => $kategori->id_kategori])); ?>" 
                                                            class="btn btn-orange-outline" 
                                                            data-bs-toggle="tooltip" 
                                                            title="Edit Kategori">
                                                             <i class="fas fa-edit"></i>
                                                         </a>
-                                                        <form action="{{ route('admin.kategori.destroy', $kategori->id_kategori) }}" 
+                                                        <form action="<?php echo e(route('admin.kategori.destroy', $kategori->id_kategori)); ?>" 
                                                               method="POST" 
                                                               class="d-inline"
                                                               onsubmit="return confirm('Apakah Anda yakin ingin menghapus kategori ini?')">
-                                                            @csrf
-                                                            @method('DELETE')
+                                                            <?php echo csrf_field(); ?>
+                                                            <?php echo method_field('DELETE'); ?>
                                                             <button type="submit" 
                                                                     class="btn btn-orange-outline" 
                                                                     data-bs-toggle="tooltip" 
@@ -149,17 +168,17 @@
                                                     </div>
                                                 </td>
                                             </tr>
-                                        @endforeach
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </tbody>
                                 </table>
                             </div>
-                        @else
+                        <?php else: ?>
                             <div class="text-center py-5">
                                 <i class="fas fa-tags fa-3x text-muted mb-3"></i>
                                 <h5 class="text-muted">Belum ada kategori</h5>
                                 <p class="text-muted">Mulai dengan menambahkan kategori pertama Anda</p>
                             </div>
-                        @endif
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -229,11 +248,11 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        @if(isset($editKategori))
+        <?php if(isset($editKategori)): ?>
             document.querySelector('.orange-card').scrollIntoView({
                 behavior: 'smooth'
             });
-        @endif
+        <?php endif; ?>
 
         const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
         const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
@@ -248,4 +267,5 @@
         });
     });
 </script>
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\laragon\www\SpeedRent\resources\views/admin/kategori.blade.php ENDPATH**/ ?>

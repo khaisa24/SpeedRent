@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Kendaraan;
 use App\Models\Rental;
 use App\Models\Pembayaran;
-use App\Models\Kendaraan;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class LaporanController extends Controller
 {
@@ -15,136 +15,203 @@ class LaporanController extends Controller
     {
         $periode = $request->get('periode', 'bulan_ini');
         
-        $data = [
-            'total_pendapatan' => $this->getTotalPendapatan($periode),
-            'total_transaksi' => $this->getTotalTransaksi($periode),
-            'rata_rata_sewa' => $this->getRataRataSewa($periode),
-            'kendaraan_terpopuler' => $this->getKendaraanPopuler($periode),
-            'customer_teraktif' => $this->getCustomerAktif($periode),
-            'pendapatan_bulanan' => $this->getPendapatanBulanan(),
-            'metode_pembayaran' => $this->getMetodePembayaran($periode),
-            'periode' => $periode,
-            'date_range' => $this->getDateRange($periode)
-        ];
+        // Tentukan date range berdasarkan periode
+        switch ($periode) {
+            case 'hari_ini':
+                $startDate = Carbon::today();
+                $endDate = Carbon::today()->endOfDay();
+                break;
+            case 'minggu_ini':
+                $startDate = Carbon::now()->startOfWeek();
+                $endDate = Carbon::now()->endOfWeek();
+                break;
+            case 'tahun_ini':
+                $startDate = Carbon::now()->startOfYear();
+                $endDate = Carbon::now()->endOfYear();
+                break;
+            case 'semua':
+                $startDate = Carbon::create(2000); // Tanggal sangat awal
+                $endDate = Carbon::now()->endOfYear();
+                break;
+            default: // bulan_ini
+                $startDate = Carbon::now()->startOfMonth();
+                $endDate = Carbon::now()->endOfMonth();
+                break;
+        }
 
-        return view('admin.laporan', $data);
-    }
-
-    private function getTotalPendapatan($periode)
-    {
-        return Pembayaran::whereBetween('created_at', $this->getDateRange($periode))
+        // Data statistik utama
+        $total_pendapatan = Pembayaran::whereBetween('created_at', [$startDate, $endDate])
             ->sum('jumlah_bayar');
-    }
-
-    private function getTotalTransaksi($periode)
-    {
-        return Rental::whereBetween('created_at', $this->getDateRange($periode))
+            
+        $total_transaksi = Rental::whereBetween('created_at', [$startDate, $endDate])
             ->count();
-    }
+            
+        $rata_rata_sewa = $total_transaksi > 0 ? $total_pendapatan / $total_transaksi : 0;
 
-    private function getRataRataSewa($periode)
-    {
-        $total = Rental::whereBetween('created_at', $this->getDateRange($periode))->count();
-        $pendapatan = $this->getTotalPendapatan($periode);
+        // DATA BARU YANG DIPERLUKAN
+        $kendaraan_tersedia = Kendaraan::where('status', 'Tersedia')->count();
         
-        return $total > 0 ? $pendapatan / $total : 0;
-    }
+        $status_kendaraan = Kendaraan::selectRaw('status, COUNT(*) as total')
+            ->groupBy('status')
+            ->get();
+            
+        $rental_terbaru = Rental::with(['user', 'kendaraan'])
+            ->orderBy('created_at', 'desc')
+            ->take(5)
+            ->get();
 
-    private function getKendaraanPopuler($periode)
-    {
-        return Rental::whereBetween('created_at', $this->getDateRange($periode))
-            ->with('kendaraan')
-            ->selectRaw('id_kendaraan, count(*) as total_sewa')
+        // Data existing (tetap pertahankan)
+        $kendaraan_terpopuler = Rental::selectRaw('id_kendaraan, COUNT(*) as total_sewa')
+            ->whereBetween('created_at', [$startDate, $endDate])
             ->groupBy('id_kendaraan')
             ->orderBy('total_sewa', 'desc')
             ->limit(5)
+            ->with('kendaraan')
             ->get();
-    }
 
-    private function getCustomerAktif($periode)
-    {
-        return Rental::whereBetween('created_at', $this->getDateRange($periode))
-            ->with('user')
-            ->selectRaw('id_user, count(*) as total_rental')
+        $customer_teraktif = Rental::selectRaw('id_user, COUNT(*) as total_rental, SUM(total_harga) as total_belanja')
+            ->whereBetween('created_at', [$startDate, $endDate])
             ->groupBy('id_user')
             ->orderBy('total_rental', 'desc')
             ->limit(5)
+            ->with('user')
             ->get();
-    }
 
-    private function getPendapatanBulanan()
-    {
-        $pendapatan = [];
+        // Data untuk grafik (opsional - bisa dihapus jika tidak digunakan)
+        $pendapatan_bulanan = [];
         for ($i = 1; $i <= 12; $i++) {
-            $pendapatan[] = Pembayaran::whereYear('created_at', date('Y'))
+            $pendapatan_bulanan[] = Pembayaran::whereYear('created_at', date('Y'))
                 ->whereMonth('created_at', $i)
                 ->sum('jumlah_bayar');
         }
-        return $pendapatan;
-    }
 
-    private function getMetodePembayaran($periode)
-    {
-        return Pembayaran::whereBetween('created_at', $this->getDateRange($periode))
-            ->selectRaw('metode_pembayaran, count(*) as total, sum(jumlah_bayar) as total_pendapatan')
+        $metode_pembayaran = Pembayaran::selectRaw('metode_pembayaran, COUNT(*) as total, SUM(jumlah_bayar) as total_pendapatan')
+            ->whereBetween('created_at', [$startDate, $endDate])
             ->groupBy('metode_pembayaran')
             ->get();
+
+        return view('admin.laporan', compact(
+            'total_pendapatan',
+            'total_transaksi', 
+            'rata_rata_sewa',
+            'kendaraan_tersedia',
+            'status_kendaraan',
+            'rental_terbaru',
+            'kendaraan_terpopuler',
+            'customer_teraktif',
+            'pendapatan_bulanan',
+            'metode_pembayaran',
+            'periode',
+            'startDate',
+            'endDate'
+        ));
     }
 
-    private function getDateRange($periode)
+    // === TAMBAHKAN METHOD INI UNTUK OWNER ===
+    public function ownerIndex(Request $request)
     {
+        $periode = $request->get('periode', 'bulan_ini');
+        
+        // Tentukan date range berdasarkan periode
         switch ($periode) {
             case 'hari_ini':
-                return [Carbon::today(), Carbon::tomorrow()];
+                $startDate = Carbon::today();
+                $endDate = Carbon::today()->endOfDay();
+                break;
             case 'minggu_ini':
-                return [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()];
-            case 'bulan_ini':
-                return [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()];
+                $startDate = Carbon::now()->startOfWeek();
+                $endDate = Carbon::now()->endOfWeek();
+                break;
             case 'tahun_ini':
-                return [Carbon::now()->startOfYear(), Carbon::now()->endOfYear()];
+                $startDate = Carbon::now()->startOfYear();
+                $endDate = Carbon::now()->endOfYear();
+                break;
             case 'semua':
-                return [Carbon::create(2020, 1, 1), Carbon::now()->endOfDay()];
-            default:
-                return [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()];
+                $startDate = Carbon::create(2000);
+                $endDate = Carbon::now()->endOfYear();
+                break;
+            default: // bulan_ini
+                $startDate = Carbon::now()->startOfMonth();
+                $endDate = Carbon::now()->endOfMonth();
+                break;
         }
+
+        // Data statistik untuk owner
+        $total_pendapatan = Pembayaran::whereBetween('created_at', [$startDate, $endDate])
+            ->sum('jumlah_bayar');
+            
+        $total_transaksi = Rental::whereBetween('created_at', [$startDate, $endDate])
+            ->count();
+            
+        $rata_rata_sewa = $total_transaksi > 0 ? $total_pendapatan / $total_transaksi : 0;
+
+        // Data kendaraan
+        $total_kendaraan = Kendaraan::count();
+        $kendaraan_tersedia = Kendaraan::where('status', 'Tersedia')->count();
+        $kendaraan_disewa = Kendaraan::where('status', 'Disewa')->count();
+        
+        $status_kendaraan = Kendaraan::selectRaw('status, COUNT(*) as total')
+            ->groupBy('status')
+            ->get();
+            
+        $rental_terbaru = Rental::with(['user', 'kendaraan'])
+            ->orderBy('created_at', 'desc')
+            ->take(5)
+            ->get();
+
+        // Kendaraan terpopuler
+        $kendaraan_terpopuler = Rental::selectRaw('id_kendaraan, COUNT(*) as total_sewa')
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->groupBy('id_kendaraan')
+            ->orderBy('total_sewa', 'desc')
+            ->limit(5)
+            ->with('kendaraan')
+            ->get();
+
+        // Customer teraktif
+        $customer_teraktif = Rental::selectRaw('id_user, COUNT(*) as total_rental, SUM(total_harga) as total_belanja')
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->groupBy('id_user')
+            ->orderBy('total_rental', 'desc')
+            ->limit(5)
+            ->with('user')
+            ->get();
+
+        // Data untuk charts
+        $pendapatan_bulanan = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $pendapatan_bulanan[] = Pembayaran::whereYear('created_at', date('Y'))
+                ->whereMonth('created_at', $i)
+                ->sum('jumlah_bayar');
+        }
+
+        $metode_pembayaran = Pembayaran::selectRaw('metode_pembayaran, COUNT(*) as total, SUM(jumlah_bayar) as total_pendapatan')
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->groupBy('metode_pembayaran')
+            ->get();
+
+        return view('owner.laporan', compact(
+            'total_pendapatan',
+            'total_transaksi', 
+            'rata_rata_sewa',
+            'total_kendaraan',
+            'kendaraan_tersedia',
+            'kendaraan_disewa',
+            'status_kendaraan',
+            'rental_terbaru',
+            'kendaraan_terpopuler',
+            'customer_teraktif',
+            'pendapatan_bulanan',
+            'metode_pembayaran',
+            'periode',
+            'startDate',
+            'endDate'
+        ));
     }
 
     public function export(Request $request)
     {
-        // Untuk export PDF/Excel (bisa dikembangkan nanti)
-        return redirect()->route('admin.laporan')
-            ->with('success', 'Fitur export akan segera tersedia!');
-    }
-
-    public function ownerIndex(Request $request)
-    {
-        // Ambil periode dari request atau set default
-        $periode = $request->input('periode', 'bulan_ini');
-        
-        // Set tanggal berdasarkan periode
-        $startDate = $request->input('start_date', Carbon::now()->startOfMonth()->format('Y-m-d'));
-        $endDate = $request->input('end_date', Carbon::now()->format('Y-m-d'));
-    
-        $rentals = Rental::with(['user', 'kendaraan', 'pembayaran'])
-            ->whereBetween('created_at', [$startDate, Carbon::parse($endDate)->endOfDay()])
-            ->orderBy('created_at', 'desc')
-            ->get();
-    
-        $totalPendapatan = Pembayaran::whereBetween('created_at', [$startDate, Carbon::parse($endDate)->endOfDay()])
-            ->sum('jumlah_bayar');
-    
-        // Data dasar untuk view
-        $total_transaksi = $rentals->count();
-        $rata_rata_sewa = $total_transaksi > 0 ? $totalPendapatan / $total_transaksi : 0;
-    
-        return view('owner.laporan', compact(
-            'rentals', 
-            'totalPendapatan', 
-            'startDate', 
-            'endDate',
-            'periode',
-            'total_transaksi',
-            'rata_rata_sewa'
-        ));
+        // Logic untuk export laporan (opsional)
+        return response()->download('path/to/exported/file.pdf');
     }
 }

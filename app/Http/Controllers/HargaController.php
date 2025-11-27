@@ -12,7 +12,7 @@ class HargaController extends Controller
     public function index(Request $request)
     {
         $hargas = Harga::with('kendaraan')
-            ->orderBy('tanggal_berlaku', 'desc')
+            ->orderBy('created_at', 'desc')
             ->get();
             
         $kendaraans = Kendaraan::all();
@@ -29,21 +29,22 @@ class HargaController extends Controller
     {
         $request->validate([
             'id_kendaraan' => 'required|exists:kendaraan,id_kendaraan',
-            'harga_perhari' => 'required|numeric|min:0',
-            'tanggal_berlaku' => 'required|date'
+            'harga_perhari' => 'required|numeric|min:0'
         ]);
 
-        // Cek apakah sudah ada harga untuk kendaraan dan tanggal yang sama
-        $existingHarga = Harga::where('id_kendaraan', $request->id_kendaraan)
-            ->where('tanggal_berlaku', $request->tanggal_berlaku)
-            ->first();
+        // Cek apakah sudah ada harga untuk kendaraan ini
+        $existingHarga = Harga::where('id_kendaraan', $request->id_kendaraan)->first();
 
         if ($existingHarga) {
             return redirect()->route('admin.harga')
-                ->with('error', 'Harga untuk kendaraan ini pada tanggal tersebut sudah ada!');
+                ->with('error', 'Harga untuk kendaraan ini sudah ada! Silakan edit harga yang sudah ada.');
         }
 
-        Harga::create($request->all());
+        Harga::create([
+            'id_kendaraan' => $request->id_kendaraan,
+            'harga_perhari' => $request->harga_perhari,
+            'tanggal_berlaku' => now() // Set tanggal berlaku ke hari ini
+        ]);
 
         return redirect()->route('admin.harga')
             ->with('success', 'Harga berhasil ditambahkan!');
@@ -53,24 +54,26 @@ class HargaController extends Controller
     {
         $request->validate([
             'id_kendaraan' => 'required|exists:kendaraan,id_kendaraan',
-            'harga_perhari' => 'required|numeric|min:0',
-            'tanggal_berlaku' => 'required|date'
+            'harga_perhari' => 'required|numeric|min:0'
         ]);
 
         $harga = Harga::findOrFail($id);
         
-        // Cek apakah sudah ada harga untuk kendaraan dan tanggal yang sama (kecuali diri sendiri)
+        // Cek apakah sudah ada harga untuk kendaraan lain dengan ID yang sama
         $existingHarga = Harga::where('id_kendaraan', $request->id_kendaraan)
-            ->where('tanggal_berlaku', $request->tanggal_berlaku)
             ->where('id_harga', '!=', $id)
             ->first();
 
         if ($existingHarga) {
             return redirect()->route('admin.harga')
-                ->with('error', 'Harga untuk kendaraan ini pada tanggal tersebut sudah ada!');
+                ->with('error', 'Harga untuk kendaraan ini sudah ada!');
         }
 
-        $harga->update($request->all());
+        $harga->update([
+            'id_kendaraan' => $request->id_kendaraan,
+            'harga_perhari' => $request->harga_perhari
+            // Tanggal berlaku tetap tidak diubah
+        ]);
 
         return redirect()->route('admin.harga')
             ->with('success', 'Harga berhasil diupdate!');

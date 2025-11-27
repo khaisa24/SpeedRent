@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Rental extends Model
 {
@@ -42,5 +43,31 @@ class Rental extends Model
     public function pembayaran()
     {
         return $this->hasOne(Pembayaran::class, 'id_rental', 'id_rental');
+    }
+
+    // Accessor untuk jumlah hari
+    public function getJumlahHariAttribute()
+    {
+        $start = Carbon::parse($this->tanggal_mulai);
+        $end = Carbon::parse($this->tanggal_selesai);
+        return $start->diffInDays($end) + 1; // Termasuk hari pertama
+    }
+
+    // Accessor untuk format total harga
+    public function getTotalHargaFormattedAttribute()
+    {
+        return 'Rp ' . number_format($this->total_harga, 0, ',', '.');
+    }
+
+    // Scope untuk rental aktif
+    public function scopeAktif($query)
+    {
+        return $query->whereIn('status_sewa', ['pending', 'berlangsung']);
+    }
+
+    // Scope untuk rental selesai
+    public function scopeSelesai($query)
+    {
+        return $query->where('status_sewa', 'selesai');
     }
 }

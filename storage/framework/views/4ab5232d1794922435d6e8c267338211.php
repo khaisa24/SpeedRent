@@ -1,8 +1,8 @@
-@extends('layouts.app')
 
-@section('title', 'Laporan - SpeedRent')
 
-@section('content')
+<?php $__env->startSection('title', 'Laporan - SpeedRent'); ?>
+
+<?php $__env->startSection('content'); ?>
 <div class="dashboard-container">
     <div class="container-fluid">
         <!-- Header -->
@@ -18,11 +18,11 @@
                     <div class="d-flex gap-3 align-items-center">
                         <form method="GET" class="d-flex gap-2">
                             <select name="periode" class="form-select form-select-sm" onchange="this.form.submit()">
-                                <option value="hari_ini" {{ $periode == 'hari_ini' ? 'selected' : '' }}>Hari Ini</option>
-                                <option value="minggu_ini" {{ $periode == 'minggu_ini' ? 'selected' : '' }}>Minggu Ini</option>
-                                <option value="bulan_ini" {{ $periode == 'bulan_ini' ? 'selected' : '' }}>Bulan Ini</option>
-                                <option value="tahun_ini" {{ $periode == 'tahun_ini' ? 'selected' : '' }}>Tahun Ini</option>
-                                <option value="semua" {{ $periode == 'semua' ? 'selected' : '' }}>Semua Waktu</option>
+                                <option value="hari_ini" <?php echo e($periode == 'hari_ini' ? 'selected' : ''); ?>>Hari Ini</option>
+                                <option value="minggu_ini" <?php echo e($periode == 'minggu_ini' ? 'selected' : ''); ?>>Minggu Ini</option>
+                                <option value="bulan_ini" <?php echo e($periode == 'bulan_ini' ? 'selected' : ''); ?>>Bulan Ini</option>
+                                <option value="tahun_ini" <?php echo e($periode == 'tahun_ini' ? 'selected' : ''); ?>>Tahun Ini</option>
+                                <option value="semua" <?php echo e($periode == 'semua' ? 'selected' : ''); ?>>Semua Waktu</option>
                             </select>
                             <button type="submit" class="btn btn-orange-outline btn-sm">
                                 <i class="fas fa-filter"></i>
@@ -43,22 +43,22 @@
                     <div class="card-body py-3">
                         <div class="row text-center">
                             <div class="col-md-3 border-end">
-                                <div class="text-success fw-bold fs-4">Rp {{ number_format($total_pendapatan, 0, ',', '.') }}</div>
+                                <div class="text-success fw-bold fs-4">Rp <?php echo e(number_format($total_pendapatan, 0, ',', '.')); ?></div>
                                 <small class="text-muted">Total Pendapatan</small>
                                 <div class="mt-1">
-                                    <small class="text-muted">Periode: {{ ucfirst(str_replace('_', ' ', $periode)) }}</small>
+                                    <small class="text-muted">Periode: <?php echo e(ucfirst(str_replace('_', ' ', $periode))); ?></small>
                                 </div>
                             </div>
                             <div class="col-md-3 border-end">
-                                <div class="text-primary fw-bold fs-4">{{ $total_transaksi }}</div>
+                                <div class="text-primary fw-bold fs-4"><?php echo e($total_transaksi); ?></div>
                                 <small class="text-muted">Total Transaksi</small>
                             </div>
                             <div class="col-md-3 border-end">
-                                <div class="text-warning fw-bold fs-4">Rp {{ number_format($rata_rata_sewa, 0, ',', '.') }}</div>
+                                <div class="text-warning fw-bold fs-4">Rp <?php echo e(number_format($rata_rata_sewa, 0, ',', '.')); ?></div>
                                 <small class="text-muted">Rata-rata per Rental</small>
                             </div>
                             <div class="col-md-3">
-                                <div class="text-info fw-bold fs-4">{{ $kendaraan_tersedia }}</div>
+                                <div class="text-info fw-bold fs-4"><?php echo e($kendaraan_tersedia); ?></div>
                                 <small class="text-muted">Kendaraan Tersedia</small>
                             </div>
                         </div>
@@ -77,7 +77,7 @@
                             Kendaraan Terpopuler
                         </h5>
                         
-                        @if($kendaraan_terpopuler->count() > 0)
+                        <?php if($kendaraan_terpopuler->count() > 0): ?>
                             <div class="table-responsive">
                                 <table class="table table-dark table-hover table-sm">
                                     <thead>
@@ -89,44 +89,44 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($kendaraan_terpopuler as $index => $populer)
+                                        <?php $__currentLoopData = $kendaraan_terpopuler; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $populer): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                             <tr>
                                                 <td>
-                                                    <div class="text-white small">{{ $populer->kendaraan->nama_kendaraan ?? $populer->kendaraan->merk }}</div>
-                                                    <small class="text-muted">{{ $populer->kendaraan->plat_nomor }}</small>
+                                                    <div class="text-white small"><?php echo e($populer->kendaraan->nama_kendaraan ?? $populer->kendaraan->merk); ?></div>
+                                                    <small class="text-muted"><?php echo e($populer->kendaraan->plat_nomor); ?></small>
                                                 </td>
-                                                <td class="text-center text-white">{{ $populer->total_sewa }}x</td>
+                                                <td class="text-center text-white"><?php echo e($populer->total_sewa); ?>x</td>
                                                 <td class="text-center">
-                                                    @if($index == 0)
+                                                    <?php if($index == 0): ?>
                                                         <span class="badge bg-warning">#1</span>
-                                                    @elseif($index == 1)
+                                                    <?php elseif($index == 1): ?>
                                                         <span class="badge bg-secondary">#2</span>
-                                                    @elseif($index == 2)
+                                                    <?php elseif($index == 2): ?>
                                                         <span class="badge bg-danger">#3</span>
-                                                    @else
-                                                        <span class="badge bg-dark">#{{ $index + 1 }}</span>
-                                                    @endif
+                                                    <?php else: ?>
+                                                        <span class="badge bg-dark">#<?php echo e($index + 1); ?></span>
+                                                    <?php endif; ?>
                                                 </td>
                                                 <td class="text-center">
-                                                    @if($populer->kendaraan->status == 'Tersedia')
+                                                    <?php if($populer->kendaraan->status == 'Tersedia'): ?>
                                                         <span class="badge bg-success">Tersedia</span>
-                                                    @elseif($populer->kendaraan->status == 'Disewa')
+                                                    <?php elseif($populer->kendaraan->status == 'Disewa'): ?>
                                                         <span class="badge bg-warning">Disewa</span>
-                                                    @else
-                                                        <span class="badge bg-danger">{{ $populer->kendaraan->status }}</span>
-                                                    @endif
+                                                    <?php else: ?>
+                                                        <span class="badge bg-danger"><?php echo e($populer->kendaraan->status); ?></span>
+                                                    <?php endif; ?>
                                                 </td>
                                             </tr>
-                                        @endforeach
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </tbody>
                                 </table>
                             </div>
-                        @else
+                        <?php else: ?>
                             <div class="text-center py-3">
                                 <i class="fas fa-car fa-2x text-muted mb-2"></i>
                                 <p class="text-muted mb-0 small">Belum ada data kendaraan</p>
                             </div>
-                        @endif
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -140,7 +140,7 @@
                             Customer Teraktif
                         </h5>
                         
-                        @if($customer_teraktif->count() > 0)
+                        <?php if($customer_teraktif->count() > 0): ?>
                             <div class="table-responsive">
                                 <table class="table table-dark table-hover table-sm">
                                     <thead>
@@ -152,34 +152,34 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($customer_teraktif as $index => $customer)
+                                        <?php $__currentLoopData = $customer_teraktif; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $customer): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                             <tr>
                                                 <td>
-                                                    <div class="text-white small">{{ $customer->user->nama_user }}</div>
-                                                    <small class="text-muted">{{ $customer->user->email }}</small>
+                                                    <div class="text-white small"><?php echo e($customer->user->nama_user); ?></div>
+                                                    <small class="text-muted"><?php echo e($customer->user->email); ?></small>
                                                 </td>
-                                                <td class="text-center text-white">{{ $customer->total_rental }}x</td>
-                                                <td class="text-center text-success">Rp {{ number_format($customer->total_belanja, 0, ',', '.') }}</td>
+                                                <td class="text-center text-white"><?php echo e($customer->total_rental); ?>x</td>
+                                                <td class="text-center text-success">Rp <?php echo e(number_format($customer->total_belanja, 0, ',', '.')); ?></td>
                                                 <td class="text-center">
-                                                    @if($customer->total_rental >= 10)
+                                                    <?php if($customer->total_rental >= 10): ?>
                                                         <span class="badge bg-success">VIP</span>
-                                                    @elseif($customer->total_rental >= 5)
+                                                    <?php elseif($customer->total_rental >= 5): ?>
                                                         <span class="badge bg-primary">Regular</span>
-                                                    @else
+                                                    <?php else: ?>
                                                         <span class="badge bg-secondary">New</span>
-                                                    @endif
+                                                    <?php endif; ?>
                                                 </td>
                                             </tr>
-                                        @endforeach
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </tbody>
                                 </table>
                             </div>
-                        @else
+                        <?php else: ?>
                             <div class="text-center py-3">
                                 <i class="fas fa-users fa-2x text-muted mb-2"></i>
                                 <p class="text-muted mb-0 small">Belum ada data customer</p>
                             </div>
-                        @endif
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -195,7 +195,7 @@
                             Status Kendaraan
                         </h5>
                         
-                        @if($status_kendaraan->count() > 0)
+                        <?php if($status_kendaraan->count() > 0): ?>
                             <div class="table-responsive">
                                 <table class="table table-dark table-hover table-sm">
                                     <thead>
@@ -206,42 +206,43 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @php
+                                        <?php
                                             $total_kendaraan = $status_kendaraan->sum('total');
-                                        @endphp
-                                        @foreach($status_kendaraan as $status)
-                                            @php
+                                        ?>
+                                        <?php $__currentLoopData = $status_kendaraan; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $status): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <?php
                                                 $persentase = $total_kendaraan > 0 ? ($status->total / $total_kendaraan) * 100 : 0;
                                                 $badge_class = [
                                                     'Tersedia' => 'bg-success',
                                                     'Disewa' => 'bg-warning',
                                                     'Maintenance' => 'bg-danger'
                                                 ][$status->status] ?? 'bg-secondary';
-                                            @endphp
+                                            ?>
                                             <tr>
                                                 <td>
-                                                    <span class="badge {{ $badge_class }}">
-                                                        {{ $status->status }}
+                                                    <span class="badge <?php echo e($badge_class); ?>">
+                                                        <?php echo e($status->status); ?>
+
                                                     </span>
                                                 </td>
-                                                <td class="text-center text-white">{{ $status->total }}</td>
-                                                <td class="text-end text-muted">{{ number_format($persentase, 1) }}%</td>
+                                                <td class="text-center text-white"><?php echo e($status->total); ?></td>
+                                                <td class="text-end text-muted"><?php echo e(number_format($persentase, 1)); ?>%</td>
                                             </tr>
-                                        @endforeach
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                         <tr class="fw-bold">
                                             <td>Total Kendaraan</td>
-                                            <td class="text-center text-white">{{ $total_kendaraan }}</td>
+                                            <td class="text-center text-white"><?php echo e($total_kendaraan); ?></td>
                                             <td class="text-end text-success">100%</td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
-                        @else
+                        <?php else: ?>
                             <div class="text-center py-3">
                                 <i class="fas fa-car fa-2x text-muted mb-2"></i>
                                 <p class="text-muted mb-0 small">Belum ada data kendaraan</p>
                             </div>
-                        @endif
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -255,7 +256,7 @@
                             Rental Terbaru
                         </h5>
                         
-                        @if($rental_terbaru->count() > 0)
+                        <?php if($rental_terbaru->count() > 0): ?>
                             <div class="table-responsive">
                                 <table class="table table-dark table-hover table-sm">
                                     <thead>
@@ -267,42 +268,43 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($rental_terbaru as $rental)
+                                        <?php $__currentLoopData = $rental_terbaru; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $rental): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                             <tr>
                                                 <td>
-                                                    <div class="text-white small">{{ $rental->user->nama_user }}</div>
-                                                    <small class="text-muted">{{ $rental->created_at->format('d/m H:i') }}</small>
+                                                    <div class="text-white small"><?php echo e($rental->user->nama_user); ?></div>
+                                                    <small class="text-muted"><?php echo e($rental->created_at->format('d/m H:i')); ?></small>
                                                 </td>
                                                 <td>
-                                                    <small class="text-white">{{ $rental->kendaraan->nama_kendaraan ?? $rental->kendaraan->merk }}</small>
+                                                    <small class="text-white"><?php echo e($rental->kendaraan->nama_kendaraan ?? $rental->kendaraan->merk); ?></small>
                                                 <br>
-                                                    <small class="text-muted">{{ $rental->kendaraan->plat_nomor }}</small>
+                                                    <small class="text-muted"><?php echo e($rental->kendaraan->plat_nomor); ?></small>
                                                 </td>
                                                 <td class="text-center">
-                                                    @php
+                                                    <?php
                                                         $statusClass = [
                                                             'pending' => 'bg-warning',
                                                             'berlangsung' => 'bg-primary',
                                                             'selesai' => 'bg-success',
                                                             'dibatalkan' => 'bg-danger'
                                                         ][$rental->status_sewa];
-                                                    @endphp
-                                                    <span class="badge {{ $statusClass }}">
-                                                        {{ ucfirst($rental->status_sewa) }}
+                                                    ?>
+                                                    <span class="badge <?php echo e($statusClass); ?>">
+                                                        <?php echo e(ucfirst($rental->status_sewa)); ?>
+
                                                     </span>
                                                 </td>
-                                                <td class="text-end text-success">Rp {{ number_format($rental->total_harga, 0, ',', '.') }}</td>
+                                                <td class="text-end text-success">Rp <?php echo e(number_format($rental->total_harga, 0, ',', '.')); ?></td>
                                             </tr>
-                                        @endforeach
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </tbody>
                                 </table>
                             </div>
-                        @else
+                        <?php else: ?>
                             <div class="text-center py-3">
                                 <i class="fas fa-clipboard-list fa-2x text-muted mb-2"></i>
                                 <p class="text-muted mb-0 small">Belum ada data rental</p>
                             </div>
-                        @endif
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -342,4 +344,5 @@
         });
     });
 </script>
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\laragon\www\SpeedRent\resources\views/admin/laporan.blade.php ENDPATH**/ ?>

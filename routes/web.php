@@ -1,10 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HargaController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\KendaraanController;
 use App\Http\Controllers\LaporanController;
@@ -22,9 +22,7 @@ Route::get('/test-kategori-simple', function() {
 });
 
 // Route utama
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Authentication Routes
 Route::middleware('guest')->group(function () {
@@ -37,10 +35,8 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     
-    // Dashboard untuk semua user yang login
+    // === PERBAIKAN: HANYA SATU ROUTE DASHBOARD YANG AUTO-REDIRECT ===
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
-    Route::get('/dashboard', [DashboardController::class, 'ownerDashboard'])->name('dashboard');
     
     // Admin routes
     Route::prefix('admin')->name('admin.')->group(function () {
@@ -95,5 +91,16 @@ Route::middleware('auth')->group(function () {
         Route::get('/kategori', [KategoriController::class, 'ownerIndex'])->name('kategori');
         Route::get('/kendaraan', [KendaraanController::class, 'ownerIndex'])->name('kendaraan');
         Route::get('/laporan', [LaporanController::class, 'ownerIndex'])->name('laporan');
+    });
+
+    // User/Customer routes
+    Route::prefix('user')->name('user.')->group(function () {
+        Route::get('/dashboard', [DashboardController::class, 'userDashboard'])->name('dashboard');
+        Route::get('/kendaraan', [KendaraanController::class, 'userIndex'])->name('kendaraan');
+        Route::get('/rental', [RentalController::class, 'userIndex'])->name('rental');
+        Route::get('/rental/history', [RentalController::class, 'userHistory'])->name('rental.history');
+        Route::post('/rental', [RentalController::class, 'userStore'])->name('rental.store');
+        Route::get('/pembayaran', [PembayaranController::class, 'userIndex'])->name('pembayaran');
+        Route::post('/pembayaran', [PembayaranController::class, 'userStore'])->name('pembayaran.store');
     });
 });

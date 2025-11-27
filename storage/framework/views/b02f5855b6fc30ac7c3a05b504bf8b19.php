@@ -1,8 +1,8 @@
-@extends('layouts.app')
 
-@section('title', 'Manajemen Harga - SpeedRent')
 
-@section('content')
+<?php $__env->startSection('title', 'Manajemen Harga - SpeedRent'); ?>
+
+<?php $__env->startSection('content'); ?>
 <div class="dashboard-container">
     <div class="container-fluid">
         <!-- Header -->
@@ -18,31 +18,33 @@
         </div>
 
         <!-- Alert Messages -->
-        @if(session('success'))
+        <?php if(session('success')): ?>
             <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
                 <i class="fas fa-check-circle me-2"></i>
-                {{ session('success') }}
+                <?php echo e(session('success')); ?>
+
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
-        @endif
+        <?php endif; ?>
 
-        @if(session('error'))
+        <?php if(session('error')): ?>
             <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
                 <i class="fas fa-exclamation-triangle me-2"></i>
-                {{ session('error') }}
+                <?php echo e(session('error')); ?>
+
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
-        @endif
+        <?php endif; ?>
 
-        @if($errors->any())
+        <?php if($errors->any()): ?>
             <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
                 <i class="fas fa-exclamation-triangle me-2"></i>
-                @foreach($errors->all() as $error)
-                    <div class="small">{{ $error }}</div>
-                @endforeach
+                <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <div class="small"><?php echo e($error); ?></div>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
-        @endif
+        <?php endif; ?>
 
         <div class="row">
             <!-- Form Input Harga -->
@@ -51,52 +53,69 @@
                     <div class="card-body">
                         <h5 class="card-title text-white mb-4">
                             <i class="fas fa-money-bill-wave me-2 text-orange"></i>
-                            {{ isset($editHarga) ? 'Edit Harga' : 'Tambah Harga Baru' }}
+                            <?php echo e(isset($editHarga) ? 'Edit Harga' : 'Tambah Harga Baru'); ?>
+
                         </h5>
                         
-                        <form action="{{ isset($editHarga) ? route('admin.harga.update', $editHarga->id_harga) : route('admin.harga.store') }}" method="POST">
-                            @csrf
-                            @if(isset($editHarga))
-                                @method('PUT')
-                            @endif
+                        <form action="<?php echo e(isset($editHarga) ? route('admin.harga.update', $editHarga->id_harga) : route('admin.harga.store')); ?>" method="POST">
+                            <?php echo csrf_field(); ?>
+                            <?php if(isset($editHarga)): ?>
+                                <?php echo method_field('PUT'); ?>
+                            <?php endif; ?>
 
                             <div class="mb-3">
                                 <label for="id_kendaraan" class="form-label">Pilih Kendaraan</label>
                                 <select class="form-control dark-select" id="id_kendaraan" name="id_kendaraan" required>
                                     <option value="" disabled selected>Pilih Kendaraan</option>
-                                    @foreach($kendaraans as $kendaraan)
-                                        <option value="{{ $kendaraan->id_kendaraan }}" 
-                                            {{ old('id_kendaraan', $editHarga->id_kendaraan ?? '') == $kendaraan->id_kendaraan ? 'selected' : '' }}>
-                                            {{ $kendaraan->nama_kendaraan }} - {{ $kendaraan->plat_nomor }}
+                                    <?php $__currentLoopData = $kendaraans; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $kendaraan): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <option value="<?php echo e($kendaraan->id_kendaraan); ?>" 
+                                            <?php echo e(old('id_kendaraan', $editHarga->id_kendaraan ?? '') == $kendaraan->id_kendaraan ? 'selected' : ''); ?>>
+                                            <?php echo e($kendaraan->nama_kendaraan); ?> - <?php echo e($kendaraan->plat_nomor); ?>
+
                                         </option>
-                                    @endforeach
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </select>
-                                @error('id_kendaraan')
-                                    <div class="text-danger small mt-1">{{ $message }}</div>
-                                @enderror
+                                <?php $__errorArgs = ['id_kendaraan'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                    <div class="text-danger small mt-1"><?php echo e($message); ?></div>
+                                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                             </div>
 
                             <div class="mb-4">
                                 <label for="harga_perhari" class="form-label">Harga Per Hari (Rp)</label>
                                 <input type="number" class="form-control" id="harga_perhari" name="harga_perhari" 
-                                       value="{{ old('harga_perhari', $editHarga->harga_perhari ?? '') }}" 
+                                       value="<?php echo e(old('harga_perhari', $editHarga->harga_perhari ?? '')); ?>" 
                                        required min="0" step="1000" placeholder="Contoh: 150000">
-                                @error('harga_perhari')
-                                    <div class="text-danger small mt-1">{{ $message }}</div>
-                                @enderror
+                                <?php $__errorArgs = ['harga_perhari'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                    <div class="text-danger small mt-1"><?php echo e($message); ?></div>
+                                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                             </div>
 
                             <div class="d-grid gap-2">
                                 <button type="submit" class="btn btn-orange-primary">
                                     <i class="fas fa-save me-2"></i>
-                                    {{ isset($editHarga) ? 'Update Harga' : 'Simpan Harga' }}
+                                    <?php echo e(isset($editHarga) ? 'Update Harga' : 'Simpan Harga'); ?>
+
                                 </button>
                                 
-                                @if(isset($editHarga))
-                                    <a href="{{ route('admin.harga') }}" class="btn btn-orange-outline">
+                                <?php if(isset($editHarga)): ?>
+                                    <a href="<?php echo e(route('admin.harga')); ?>" class="btn btn-orange-outline">
                                         <i class="fas fa-times me-2"></i>Batal Edit
                                     </a>
-                                @endif
+                                <?php endif; ?>
                             </div>
                         </form>
                     </div>
@@ -112,7 +131,7 @@
                             Daftar Harga Sewa
                         </h5>
 
-                        @if($hargas->count() > 0)
+                        <?php if($hargas->count() > 0): ?>
                             <div class="table-responsive">
                                 <table class="table table-dark table-hover">
                                     <thead>
@@ -126,20 +145,23 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($hargas as $index => $harga)
-                                            @php
+                                        <?php $__currentLoopData = $hargas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $harga): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <?php
                                                 $isActive = true; // Semua harga aktif karena tidak ada tanggal berlaku
-                                            @endphp
+                                            ?>
                                             <tr>
-                                                <td class="text-muted">{{ $index + 1 }}</td>
+                                                <td class="text-muted"><?php echo e($index + 1); ?></td>
                                                 <td class="text-white">
-                                                    {{ $harga->kendaraan->nama_kendaraan ?? 'N/A' }}
+                                                    <?php echo e($harga->kendaraan->nama_kendaraan ?? 'N/A'); ?>
+
                                                 </td>
                                                 <td class="text-muted">
-                                                    {{ $harga->kendaraan->plat_nomor ?? 'N/A' }}
+                                                    <?php echo e($harga->kendaraan->plat_nomor ?? 'N/A'); ?>
+
                                                 </td>
                                                 <td class="text-white fw-bold">
-                                                    Rp {{ number_format($harga->harga_perhari, 0, ',', '.') }}
+                                                    Rp <?php echo e(number_format($harga->harga_perhari, 0, ',', '.')); ?>
+
                                                 </td>
                                                 <td>
                                                     <span class="badge bg-success">
@@ -148,18 +170,18 @@
                                                 </td>
                                                 <td class="text-center">
                                                     <div class="btn-group btn-group-sm" role="group">
-                                                        <a href="{{ route('admin.harga', ['edit' => $harga->id_harga]) }}" 
+                                                        <a href="<?php echo e(route('admin.harga', ['edit' => $harga->id_harga])); ?>" 
                                                            class="btn btn-orange-outline" 
                                                            data-bs-toggle="tooltip" 
                                                            title="Edit Harga">
                                                             <i class="fas fa-edit"></i>
                                                         </a>
-                                                        <form action="{{ route('admin.harga.destroy', $harga->id_harga) }}" 
+                                                        <form action="<?php echo e(route('admin.harga.destroy', $harga->id_harga)); ?>" 
                                                               method="POST" 
                                                               class="d-inline"
                                                               onsubmit="return confirm('Apakah Anda yakin ingin menghapus harga ini?')">
-                                                            @csrf
-                                                            @method('DELETE')
+                                                            <?php echo csrf_field(); ?>
+                                                            <?php echo method_field('DELETE'); ?>
                                                             <button type="submit" 
                                                                     class="btn btn-orange-outline" 
                                                                     data-bs-toggle="tooltip" 
@@ -170,17 +192,17 @@
                                                     </div>
                                                 </td>
                                             </tr>
-                                        @endforeach
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </tbody>
                                 </table>
                             </div>
-                        @else
+                        <?php else: ?>
                             <div class="text-center py-5">
                                 <i class="fas fa-money-bill-wave fa-3x text-muted mb-3"></i>
                                 <h5 class="text-muted">Belum ada data harga</h5>
                                 <p class="text-muted">Mulai dengan menambahkan harga pertama Anda</p>
                             </div>
-                        @endif
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -229,11 +251,11 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Auto scroll to form when editing
-        @if(isset($editHarga))
+        <?php if(isset($editHarga)): ?>
             document.querySelector('.orange-card').scrollIntoView({
                 behavior: 'smooth'
             });
-        @endif
+        <?php endif; ?>
 
         // Initialize tooltips
         const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
@@ -249,4 +271,5 @@
         });
     });
 </script>
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\laragon\www\SpeedRent\resources\views/admin/harga.blade.php ENDPATH**/ ?>

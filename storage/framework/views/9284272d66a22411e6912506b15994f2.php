@@ -1,8 +1,8 @@
-@extends('layouts.app')
 
-@section('title', 'Manajemen Rental - SpeedRent')
 
-@section('content')
+<?php $__env->startSection('title', 'Manajemen Rental - SpeedRent'); ?>
+
+<?php $__env->startSection('content'); ?>
 <div class="dashboard-container">
     <div class="container-fluid">
         <!-- Header -->
@@ -15,38 +15,40 @@
                     </div>
                     <div class="badge bg-primary fs-6">
                         <i class="fas fa-sync-alt me-1"></i>
-                        {{ $rental_aktif }} Rental Aktif
+                        <?php echo e($rental_aktif); ?> Rental Aktif
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Alert Messages -->
-        @if(session('success'))
+        <?php if(session('success')): ?>
             <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
                 <i class="fas fa-check-circle me-2"></i>
-                {{ session('success') }}
+                <?php echo e(session('success')); ?>
+
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
-        @endif
+        <?php endif; ?>
 
-        @if(session('error'))
+        <?php if(session('error')): ?>
             <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
                 <i class="fas fa-exclamation-triangle me-2"></i>
-                {{ session('error') }}
+                <?php echo e(session('error')); ?>
+
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
-        @endif
+        <?php endif; ?>
 
-        @if($errors->any())
+        <?php if($errors->any()): ?>
             <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
                 <i class="fas fa-exclamation-triangle me-2"></i>
-                @foreach($errors->all() as $error)
-                    <div class="small">{{ $error }}</div>
-                @endforeach
+                <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <div class="small"><?php echo e($error); ?></div>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
-        @endif
+        <?php endif; ?>
 
         <!-- Daftar Rental -->
         <div class="row">
@@ -58,7 +60,7 @@
                             Daftar Rental
                         </h5>
 
-                        @if($rentals->count() > 0)
+                        <?php if($rentals->count() > 0): ?>
                             <div class="table-responsive">
                                 <table class="table table-dark table-hover">
                                     <thead>
@@ -73,38 +75,40 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($rentals as $index => $rental)
+                                        <?php $__currentLoopData = $rentals; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $rental): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                             <tr>
-                                                <td class="text-muted">{{ $index + 1 }}</td>
+                                                <td class="text-muted"><?php echo e($index + 1); ?></td>
                                                 <td>
-                                                    <div class="text-white">{{ $rental->user->nama_user }}</div>
-                                                    <small class="text-muted">{{ $rental->user->email }}</small>
+                                                    <div class="text-white"><?php echo e($rental->user->nama_user); ?></div>
+                                                    <small class="text-muted"><?php echo e($rental->user->email); ?></small>
                                                 </td>
                                                 <td>
-                                                    <div class="text-white">{{ $rental->kendaraan->nama_kendaraan ?? $rental->kendaraan->merk }}</div>
-                                                    <small class="text-muted">{{ $rental->kendaraan->plat_nomor }}</small>
+                                                    <div class="text-white"><?php echo e($rental->kendaraan->nama_kendaraan ?? $rental->kendaraan->merk); ?></div>
+                                                    <small class="text-muted"><?php echo e($rental->kendaraan->plat_nomor); ?></small>
                                                 </td>
                                                 <td class="text-muted">
-                                                    <div>{{ $rental->tanggal_mulai->format('d/m/Y') }}</div>
-                                                    <small>s/d {{ $rental->tanggal_selesai->format('d/m/Y') }}</small>
+                                                    <div><?php echo e($rental->tanggal_mulai->format('d/m/Y')); ?></div>
+                                                    <small>s/d <?php echo e($rental->tanggal_selesai->format('d/m/Y')); ?></small>
                                                     <div class="small text-orange">
-                                                        {{ $rental->jumlah_hari }} hari
+                                                        <?php echo e($rental->jumlah_hari); ?> hari
                                                     </div>
                                                 </td>
                                                 <td class="text-white fw-bold">
-                                                    Rp {{ number_format($rental->total_harga, 0, ',', '.') }}
+                                                    Rp <?php echo e(number_format($rental->total_harga, 0, ',', '.')); ?>
+
                                                 </td>
                                                 <td>
-                                                    @php
+                                                    <?php
                                                         $statusClass = [
                                                             'pending' => 'bg-warning',
                                                             'berlangsung' => 'bg-primary', 
                                                             'selesai' => 'bg-success',
                                                             'dibatalkan' => 'bg-danger'
                                                         ][$rental->status_sewa];
-                                                    @endphp
-                                                    <span class="badge {{ $statusClass }}">
-                                                        {{ ucfirst($rental->status_sewa) }}
+                                                    ?>
+                                                    <span class="badge <?php echo e($statusClass); ?>">
+                                                        <?php echo e(ucfirst($rental->status_sewa)); ?>
+
                                                     </span>
                                                 </td>
                                                 <td class="text-center">
@@ -117,20 +121,21 @@
                                                                 <i class="fas fa-sync-alt"></i>
                                                             </button>
                                                             <ul class="dropdown-menu">
-                                                                @foreach(['pending', 'berlangsung', 'selesai', 'dibatalkan'] as $status)
-                                                                    @if($status != $rental->status_sewa)
+                                                                <?php $__currentLoopData = ['pending', 'berlangsung', 'selesai', 'dibatalkan']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $status): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                                    <?php if($status != $rental->status_sewa): ?>
                                                                         <li>
-                                                                            <form action="{{ route('admin.rental.updateStatus', $rental->id_rental) }}" method="POST" class="d-inline">
-                                                                                @csrf
-                                                                                @method('PUT')
-                                                                                <input type="hidden" name="status_sewa" value="{{ $status }}">
+                                                                            <form action="<?php echo e(route('admin.rental.updateStatus', $rental->id_rental)); ?>" method="POST" class="d-inline">
+                                                                                <?php echo csrf_field(); ?>
+                                                                                <?php echo method_field('PUT'); ?>
+                                                                                <input type="hidden" name="status_sewa" value="<?php echo e($status); ?>">
                                                                                 <button type="submit" class="dropdown-item">
-                                                                                    Set {{ ucfirst($status) }}
+                                                                                    Set <?php echo e(ucfirst($status)); ?>
+
                                                                                 </button>
                                                                             </form>
                                                                         </li>
-                                                                    @endif
-                                                                @endforeach
+                                                                    <?php endif; ?>
+                                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                             </ul>
                                                         </div>
 
@@ -138,7 +143,7 @@
                                                         <button type="button" class="btn btn-orange-outline view-rental-btn"
                                                                 data-bs-toggle="modal" 
                                                                 data-bs-target="#viewRentalModal"
-                                                                data-rental="{{ json_encode([
+                                                                data-rental="<?php echo e(json_encode([
                                                                     'customer' => $rental->user->nama_user,
                                                                     'email' => $rental->user->email,
                                                                     'kendaraan' => $rental->kendaraan->nama_kendaraan ?? $rental->kendaraan->merk,
@@ -149,24 +154,24 @@
                                                                     'total_harga' => 'Rp ' . number_format($rental->total_harga, 0, ',', '.'),
                                                                     'status_sewa' => ucfirst($rental->status_sewa),
                                                                     'created_at' => $rental->created_at->format('d/m/Y H:i')
-                                                                ]) }}"
+                                                                ])); ?>"
                                                                 title="Lihat Detail">
                                                             <i class="fas fa-eye"></i>
                                                         </button>
                                                     </div>
                                                 </td>
                                             </tr>
-                                        @endforeach
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </tbody>
                                 </table>
                             </div>
-                        @else
+                        <?php else: ?>
                             <div class="text-center py-5">
                                 <i class="fas fa-clipboard-list fa-3x text-muted mb-3"></i>
                                 <h5 class="text-muted">Belum ada data rental</h5>
                                 <p class="text-muted">Tunggu customer melakukan pemesanan rental</p>
                             </div>
-                        @endif
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -324,4 +329,5 @@
         });
     });
 </script>
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\laragon\www\SpeedRent\resources\views/admin/rental.blade.php ENDPATH**/ ?>
